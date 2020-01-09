@@ -1,10 +1,10 @@
 {-# OPTIONS --exact-split --safe --prop #-}
 
-open import CategoryTheory.Category.Definition 
+open import Category.Definition 
 
 open import PropUniverses
 
-module CategoryTheory.Category.Monomorphism ⦃ ℂ : Category 𝒰 𝒱 ⦄ where
+module Category.Monomorphism ⦃ ℂ : Category 𝒰 𝒱 ⦄ where
 
 open import Proposition.Identity
 

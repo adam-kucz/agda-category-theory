@@ -1,14 +1,15 @@
 {-# OPTIONS --safe --exact-split --prop  #-}
-module CategoryTheory.Category.Opposite where
+module Category.Opposite where
 
-open import CategoryTheory.Category.Definition
+open import Category.Definition
 
 open import PropUniverses
 open import Proposition.Identity using (_==_; refl)
 open import Relation.Binary using (sym)
 
-_ᵒᵖ : (C : Category 𝒰 𝒱) → Category 𝒰 𝒱
-C ᵒᵖ = record
+infix 159 _ᵒᵖ
+_ᵒᵖ : (ℂ : Category 𝒰 𝒱) → Category 𝒰 𝒱
+ℂ ᵒᵖ = record
   { obj = obj
   ; _~>_ = λ X Y → Y ~> X
   ; id = id
@@ -17,7 +18,7 @@ C ᵒᵖ = record
   ; right-unit = left-unit
   ; assoc = λ h g f → sym (assoc f g h)
   }
-  where instance _ = C
+  where instance _ = ℂ
 
 open import Function.Property using (Involutive; invol)
 
@@ -25,29 +26,30 @@ instance
   Involutiveᵒᵖ : Involutive (_ᵒᵖ {𝒰} {𝒱})
   invol ⦃ Involutiveᵒᵖ ⦄ = refl
 
-dual : (A : ⦃ C : Category 𝒰 𝒱 ⦄ → X) ⦃ C : Category 𝒰 𝒱 ⦄ → X
-dual A ⦃ C ⦄ = A ⦃ C ᵒᵖ ⦄
+dual : (A : ⦃ ℂ : Category 𝒰 𝒱 ⦄ → X) ⦃ ℂ : Category 𝒰 𝒱 ⦄ → X
+dual A ⦃ ℂ ⦄ = A ⦃ ℂ ᵒᵖ ⦄
 
-dualₚ : (A : ⦃ C : Category 𝒰 𝒱 ⦄ → 𝑋) ⦃ C : Category 𝒰 𝒱 ⦄ → 𝑋
-dualₚ A ⦃ C ⦄ = A ⦃ C ᵒᵖ ⦄
+dualₚ : (A : ⦃ ℂ : Category 𝒰 𝒱 ⦄ → 𝑋) ⦃ ℂ : Category 𝒰 𝒱 ⦄ → 𝑋
+dualₚ A ⦃ ℂ ⦄ = A ⦃ ℂ ᵒᵖ ⦄
 
-open import CategoryTheory.Category.Isomorphism
+open import Isomorphism
 open import Logic using (_,_)
 
 iso-self-dual :
-  ⦃ C : Category 𝒰 𝒱 ⦄
-  {X Y : obj} (f : X ~> Y)
-  (iso-f : iso ⦃ C ⦄ f)
-  → ----------------------
-  iso ⦃ C ᵒᵖ ⦄ f
+  ⦃ ℂ : Category 𝒰 𝒱 ⦄
+  {X Y : obj}
+  (f : X ~> Y)
+  (iso-f : iso f)
+  → --------------------
+  iso ⦃ ℂ ᵒᵖ ⦄ f
 iso-self-dual f (g , (g∘f==id , f∘g==id)) = g , (f∘g==id , g∘f==id)
 
 ≅-self-dual :
-  ⦃ C : Category 𝒰 𝒱 ⦄
+  ⦃ ℂ : Category 𝒰 𝒱 ⦄
   {X Y : obj}
   (X≅Y : X ≅ Y)
   → --------------------
-  _≅_ ⦃ C ᵒᵖ ⦄ X Y
+  _≅_ ⦃ ℂ ᵒᵖ ⦄ X Y
 ≅-self-dual (X~>Y , (Y~>X , p)) = Y~>X , (X~>Y , p)
 
 open import Proposition.Identity using (_==_; ap)
@@ -55,11 +57,11 @@ open import Proposition.Function using (_$_)
 open import Proof
 
 ≅-unique-self-dual :
-  ⦃ C : Category 𝒰 𝒱 ⦄
+  ⦃ ℂ : Category 𝒰 𝒱 ⦄
   {X Y : obj}
   (X≅Y : X ≅-unique Y)
   → --------------------
-  _≅-unique_ ⦃ C ᵒᵖ ⦄ X Y
+  _≅-unique_ ⦃ ℂ ᵒᵖ ⦄ X Y
 ≅-unique-self-dual {X = X} {Y}
     (X~>Y , (Y~>X , (X~>Y∘Y~>X==id , Y~>X∘X~>Y==id) , uniq-iso-X~>Y)) =
   Y~>X , (X~>Y , (X~>Y∘Y~>X==id , Y~>X∘X~>Y==id) ,

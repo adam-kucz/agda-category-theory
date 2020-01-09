@@ -1,12 +1,13 @@
 {-# OPTIONS --exact-split --safe --prop #-}
-module CategoryTheory.Category.Definition where
+module Category.Definition where
 
 open import PropUniverses
 open import Proposition.Identity using (_==_)
 open import Logic
 
 record Category (𝒰 𝒱 : Universe) : 𝒰 ⁺ ⊔ 𝒱 ⁺ ˙ where
-  infixl 25 _∘_
+  infixl 165 _∘_
+  infix 160 _~>_
   field
     obj : 𝒰 ˙
     _~>_ : (X Y : obj) → 𝒱 ˙
@@ -23,7 +24,9 @@ record Category (𝒰 𝒱 : Universe) : 𝒰 ⁺ ⊔ 𝒱 ⁺ ˙ where
 
   mor : (X Y : obj) → 𝒱 ˙
   mor = _~>_
-  
+
+  syntax mor ℂ A B = A ~[ ℂ ]~> B
+
   dom : {X Y : obj} (f : X ~> Y) → obj
   dom {X = X} _ = X
   
@@ -32,8 +35,23 @@ record Category (𝒰 𝒱 : Universe) : 𝒰 ⁺ ⊔ 𝒱 ⁺ ˙ where
 
 open Category ⦃ … ⦄ hiding (mor; dom; cod) public
 
+compose :
+  (ℂ : Category 𝒰 𝒱)
+  → let instance _ = ℂ in
+  {A B C : obj}
+  (g : B ~> C)
+  (f : A ~> B)
+  → -----------------------
+  A ~> C
+compose ℂ g f = g ∘ f
+  where instance _ = ℂ
+
+infixl 165 compose
+syntax compose ℂ g f = g ∘[ ℂ ] f
+
 {-# DISPLAY Category._~>_ C X Y = X ~> Y #-}
 {-# DISPLAY Category._∘_ C X Y = X ∘ Y #-}
+{-# DISPLAY Category.id C X = id X #-}
 
 record Arrow ⦃ ℂ : Category 𝒰 𝒱 ⦄ : 𝒰 ⊔ 𝒱 ˙ where
   constructor mk-arrow
@@ -46,4 +64,8 @@ pattern _—_➙_ X f Y = mk-arrow X Y f
 arrow : ⦃ ℂ : Category 𝒰 𝒱 ⦄ {X Y : obj} (f : X ~> Y) → Arrow
 arrow {X = X} {Y} f = X — f ➙ Y
 
-open Category ⦃ … ⦄ using (mor; dom; cod) public
+open Category ⦃ … ⦄ using (dom; cod) public
+open Category using (mor) public
+
+
+

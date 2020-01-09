@@ -1,8 +1,8 @@
 {-# OPTIONS --safe --exact-split --prop  #-}
-module CategoryTheory.Example.Simple where
+module Example.Simple where
 
 open import Universes
-open import CategoryTheory.Category
+open import Category
 
 open import Type.Empty renaming (𝟘 to Empty)
 open import Type.Unit renaming (𝟙 to Unit)

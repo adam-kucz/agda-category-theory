@@ -1,8 +1,8 @@
 {-# OPTIONS --exact-split --safe --prop #-}
 
-module CategoryTheory.Category.Slice where
+module Category.Slice where
 
-open import CategoryTheory.Category.Definition
+open import Category.Definition
 
 open import Universes
 open import Type.Sum
@@ -27,7 +27,7 @@ _╱_ : (ℂ : Category 𝒰 𝒱) (A : obj ⦃ ℂ ⦄) → Category (𝒰 ⊔ 
   }
   where instance _ = ℂ
 
-open import CategoryTheory.Functor
+open import Functor
 open import Relation.Binary.Property using (sym)
 
 SliceFunctor :

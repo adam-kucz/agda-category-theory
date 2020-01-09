@@ -1,7 +1,7 @@
 {-# OPTIONS --exact-split --prop  #-}
-module CategoryTheory.Example.Set' where
+module Example.Set' where
 
-open import CategoryTheory.Category
+open import Category
 
 open import Universes
 open import Proposition.Identity using (_==_; refl; ap)
@@ -20,11 +20,16 @@ right-unit ⦃ Set' ⦄ f = refl f
 assoc ⦃ Set' ⦄ h g f = refl (h o g o f)
 
 open import Relation.Binary.Property
-open import Proof
+open import Proof hiding (_$_)
 open import Proposition.Sum using (elem; prop; Σₚ)
 open import Function.Extensionality
+open import Isomorphism
 
-iso-in-Set : ∀ (f : (x : X) → Y) → iso ⦃ Set' ⦄ f ↔ Bijective f
+private
+  instance
+    _ = Set'
+
+iso-in-Set : {X Y : 𝒰 ˙} (f : (x : X) → Y) → iso f ↔ Bijective f
 ⟶ (iso-in-Set f) (g , (f∘g==id , g∘f==id)) = record {}
   where instance
           inject : Injective f
@@ -44,14 +49,14 @@ iso-in-Set : ∀ (f : (x : X) → Y) → iso ⦃ Set' ⦄ f ↔ Bijective f
         inv : (y : Y) → Σₚ λ x → f x == y
         inv y = choice (sur y)
 
-open import CategoryTheory.Object.Terminal
+-- open import Construction.Terminal
 
-terminal : (p : Σₚ λ (c : X) → (x : X) → c == x) → IsTerminal ⦃ Set' ⦄ X
-IsTerminal.to-terminal (terminal (c , c==)) Y =
-  (λ _ → c) , λ f → fun-ext λ y → sym (c== (f y))
+-- terminal : (p : Σₚ λ (c : X) → (x : X) → c == x) → IsTerminal X
+-- IsTerminal.to-terminal (terminal (c , c==)) Y =
+--   (λ _ → c) , λ f → fun-ext λ y → sym (c== (f y))
 
-open import Type.Empty renaming (𝟘 to ∅) using ()
-open import CategoryTheory.Object.Initial
+-- open import Type.Empty renaming (𝟘 to ∅) using ()
+-- open import Construction.Initial
 
-initial : IsInitial ⦃ Set' ⦄ ∅
-IsTerminal.to-terminal initial X = (λ ()) , λ _ → fun-ext λ ()
+-- initial : IsInitial ∅
+-- IsTerminal.to-terminal initial X = (λ ()) , λ _ → fun-ext λ ()

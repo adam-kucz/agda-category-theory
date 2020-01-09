@@ -1,22 +1,24 @@
 {-# OPTIONS --exact-split --safe --prop #-}
 
-open import CategoryTheory.Category.Definition
+open import Category
 
 open import PropUniverses hiding (X; Y)
 
-module CategoryTheory.Category.Isomorphism ⦃ ℂ : Category 𝒰 𝒱 ⦄ where
+module Isomorphism.Definition ⦃ ℂ : Category 𝒰 𝒱 ⦄ where
 
 open import Proposition.Identity using (_==_)
 open import Logic
 
-iso : (f : Arrow) → 𝒱 ᵖ
-iso (X — f ➙ Y) = ∃ λ (g : Y ~> X) → f ∘ g == id Y ∧ g ∘ f == id X
+iso : {X Y : obj} (f : X ~> Y) → 𝒱 ᵖ
+iso f = ∃ λ (g : Y ~> X) → f ∘ g == id Y ∧ g ∘ f == id X
+  where X = dom f
+        Y = cod f
 
 _≅_ : (X Y : obj) → 𝒱 ᵖ
-X ≅ Y = ∃ λ (f : X ~> Y) → iso (X — f ➙ Y)
+X ≅ Y = ∃ λ (f : X ~> Y) → iso f
 
 _≅-unique_ : (X Y : obj) → 𝒱 ᵖ
-X ≅-unique Y = ∃! λ (f : X ~> Y) → iso (X — f ➙ Y)
+X ≅-unique Y = ∃! λ (f : X ~> Y) → iso f
 
 open import Proof
 open import Function.Proof
@@ -25,7 +27,7 @@ open import Proposition.Function using (_$_)
 
 iso-uniq : {X Y : obj}
   (f : X ~> Y)
-  (f-iso : iso (X — f ➙ Y))
+  (f-iso : iso f)
   → -------------------------------------------
   ∃! λ (g : Y ~> X) → f ∘ g == id Y ∧ g ∘ f == id X
 iso-uniq {X = X} {Y} f (g , (fg=id , gf=id)) =

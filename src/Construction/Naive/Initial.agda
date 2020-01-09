@@ -1,8 +1,9 @@
 {-# OPTIONS --exact-split --safe --prop #-}
-module CategoryTheory.Object.Initial where
+module Construction.Initial where
 
-open import CategoryTheory.Category
-open import CategoryTheory.Object.Terminal
+open import Category
+open import Category.Opposite
+open import Construction.Terminal
 
 open import PropUniverses
 open import Proposition.Unique
