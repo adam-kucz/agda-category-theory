@@ -10,17 +10,6 @@ open import Relation.Binary using (sym)
 
 open import Example.Simple using (𝟘)
 
-Trivial : 
-  (ℂ : Category 𝒰 𝒱)
-  → --------------------
-  Functor 𝟘 ℂ
-Trivial ℂ = record
-  { F₀ = λ ()
-  ; F₁ = λ { {()} }
-  ; id-preserv = λ ()
-  ; ∘-preserv = λ { {()} }
-  }
-
 Const :
   (ℂ : Category 𝒰 𝒱)
   {𝔻 : Category 𝒲 𝒯}

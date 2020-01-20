@@ -8,7 +8,7 @@ open import Category.ArrowCategory
 
 open import Universes hiding (X; Y; Z)
 open import Logic hiding (_,_)
-open import Proof
+open import Proof hiding (Id)
 
 open import Axiom.FunctionExtensionality
 

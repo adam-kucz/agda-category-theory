@@ -67,5 +67,3 @@ arrow {X = X} {Y} f = X — f ➙ Y
 open Category ⦃ … ⦄ using (dom; cod) public
 open Category using (mor) public
 
-
-

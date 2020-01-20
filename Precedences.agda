@@ -6,6 +6,11 @@ infix 245 _[_,—] -- Functor.Representable
 infix 245 _[—,_] -- Functor.Representable
 infixl 240 _o_ -- Functor.Construction
 
+-- Adjunctions (235 - 225)
+
+infix 230 _⊣_ -- Adjunction.Definition
+infix 230 _-|_ -- Adjunction.Definition
+
 -- Natural Transformations (220 - 210)
 
 infix 215 _⟹_ -- NaturalTransformation.Definition
@@ -13,8 +18,9 @@ infix 210 Composition -- NaturalTransformation.Construction
 
 -- Objects (200 - 180)
 
-infixl 190 _×_ -- Construction.Exponential
-infixl 180 _×_ -- Construction.Product
+infixl 190 _^_ -- Construction.Exponential
+infixl 181 _×_ -- Construction.Simple.Product
+infixl 180 _+_ -- Construction.Simple.Coproduct
 
 -- Morphisms (170 - 160)
 

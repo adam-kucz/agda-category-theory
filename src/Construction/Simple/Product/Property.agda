@@ -1,10 +1,11 @@
 {-# OPTIONS --exact-split --prop --safe #-}
+module Construction.Simple.Product.Property where
+
+import Construction.Simple.Product.Definition as Prod
+
 open import PropUniverses
 open import Category
-
-module Construction.Product.Property where
-
-import Construction.Product.Definition as Prod
+open import Isomorphism
 
 HasProducts : (ℂ : Category 𝒲 𝒯) → 𝒲 ⊔ 𝒯 ˙
 HasProducts ℂ = ∀ {A B : obj} → Product A B

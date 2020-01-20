@@ -57,7 +57,7 @@ record NaturalTransformation'
 
 open NaturalTransformation' ⦃ … ⦄
 
-open import Function.Property using (Bijection; invertible-is-bijective)
+open import Function.Property using (Bijection)
 open import Proposition.Sum
 open import Proof
 open import Logic

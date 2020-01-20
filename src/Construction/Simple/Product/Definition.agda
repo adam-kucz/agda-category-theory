@@ -2,7 +2,7 @@
 open import Category
 open import PropUniverses
 
-module Construction.Product.Definition ⦃ C : Category 𝒰 𝒱 ⦄ where
+module Construction.Simple.Product.Definition ⦃ C : Category 𝒰 𝒱 ⦄ where
 
 open import Proposition.Identity
 open import Logic
@@ -32,7 +32,7 @@ record Product (A B : obj) : 𝒰 ⊔ 𝒱 ˙ where
 
 open Product ⦃ … ⦄ public
 
-infixl 180 _×_
+infixl 181 _×_
 _×_ : (A B : obj) ⦃ _ : Product A B ⦄ → obj
 A × B = object
   

@@ -2,7 +2,7 @@
 open import PropUniverses
 open import Category
 
-module Construction.Terminal ⦃ C : Category 𝒰 𝒱 ⦄ where
+module Construction.Simple.Terminal ⦃ C : Category 𝒰 𝒱 ⦄ where
 
 open import Proposition.Unique
 
@@ -19,6 +19,8 @@ open Terminal ⦃ … ⦄ public
 
 〈〉 : ⦃ _ : Terminal ⦄ (X : obj) → Unique (X ~> 𝟙)
 〈〉 X = IsTerminal.to-terminal def X
+
+open import Isomorphism
 
 open import Proposition.Sum using (_,_)
 open import Proposition.Identity using (_==_; ap)

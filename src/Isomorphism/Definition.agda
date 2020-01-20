@@ -42,13 +42,13 @@ iso-uniq {X = X} {Y} f (g , (fg=id , gf=id)) =
            〉 _==_ 〉 g            :by: left-unit g
       qed}))
 
-monic : (p : Arrow) → 𝒰 ⊔ 𝒱 ᵖ
-monic (X — p ➙ Y) = {W : obj} {f g : W ~> dom p} (q : p ∘ f == p ∘ g) → f == g
+monic : {X Y : obj} (p : X ~> Y) → 𝒰 ⊔ 𝒱 ᵖ
+monic p = {W : obj} {f g : W ~> dom p} (q : p ∘ f == p ∘ g) → f == g
 
 epic : {X Y : obj} (p : X ~> Y) → 𝒰 ⊔ 𝒱 ᵖ
 epic p = {W : obj} {f g : cod p ~> W} (q : f ∘ p == g ∘ p) → f == g
 
-id-is-monic : (X : obj) → monic (X — id X ➙ X)
+id-is-monic : (X : obj) → monic (id X)
 id-is-monic X {f = f} {g} q =
   proof f
     〉 _==_ 〉 id X ∘ f :by: sym $ left-unit f
@@ -62,10 +62,10 @@ open import Proposition.Proof
   {X Y Z : obj}
   {f : X ~> Y}
   {g : Y ~> Z}
-  (p₁ : monic (X — f ➙ Y))
-  (p₂ : monic (Y — g ➙ Z))
+  (p₁ : monic f)
+  (p₂ : monic g)
   → ----------------------
-  monic (X — g ∘ f ➙ Z)
+  monic (g ∘ f)
 ∘-monic-closed {f = f} {g} p₁ p₂ {f = f₁} {g₁} q =
   have g ∘ (f ∘ f₁) == g ∘ (f ∘ g₁)
       :from: proof g ∘ (f ∘ f₁)
@@ -80,9 +80,9 @@ pre-monic :
   {X Y Z : obj}
   {f : X ~> Y}
   {g : Y ~> Z}
-  (p : monic (X — g ∘ f ➙ Z))
+  (p : monic (g ∘ f))
   → ----------------------
-  monic (X — f ➙ Y)
+  monic f
 pre-monic {f = f} {g} p {f = f₁} {g₁} q = p (
   proof g ∘ f ∘ f₁
     〉 _==_ 〉 g ∘ (f ∘ f₁) :by: sym $ assoc g f f₁
@@ -90,11 +90,15 @@ pre-monic {f = f} {g} p {f = f₁} {g₁} q = p (
     〉 _==_ 〉 g ∘ f ∘ g₁   :by: assoc g f g₁
   qed)
 
-split-monic : (s : Arrow) → 𝒱 ᵖ
-split-monic (X — s ➙ Y) = ∃ λ (r : Y ~> X) → r ∘ s == id X
+split-monic : {X Y : obj}(s : X ~> Y) → 𝒱 ᵖ
+split-monic {X = X}{Y} s = ∃ λ (r : Y ~> X) → r ∘ s == id X
 
-split-monic-is-monic : {s : Arrow} (p : split-monic s) → monic s
-split-monic-is-monic {X — s ➙ Y} (r , p) {f = f} {g} q =
+split-monic-is-monic :
+  {X Y : obj}{s : X ~> Y}
+  (p : split-monic s)
+  → -----------------------
+  monic s
+split-monic-is-monic {X = X}{_}{s} (r , p) {f = f} {g} q =
   proof f
     〉 _==_ 〉 id X ∘ f    :by: sym $ left-unit f
     〉 _==_ 〉 r ∘ s ∘ f   :by: ap (_∘ f) $ sym p
@@ -104,3 +108,17 @@ split-monic-is-monic {X — s ➙ Y} (r , p) {f = f} {g} q =
     〉 _==_ 〉 id X ∘ g    :by: ap (_∘ g) p
     〉 _==_ 〉 g           :by: left-unit g
   qed
+
+iso-is-split-monic : 
+  {X Y : obj}{f : X ~> Y}
+  (p : iso f)
+  → -----------------------
+  split-monic f
+iso-is-split-monic (f⁻¹ , (_ , left-inv)) = f⁻¹ , left-inv
+
+iso-is-monic :
+  {X Y : obj}{f : X ~> Y}
+  (p : iso f)
+  → -----------------------
+  monic f
+iso-is-monic p = split-monic-is-monic $ iso-is-split-monic p

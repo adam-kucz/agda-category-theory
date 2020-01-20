@@ -7,27 +7,29 @@ open import Universes
 open import Proposition.Identity using (_==_; refl; ap)
 open import Logic using (_↔_; ⟶; ⟵; _,_; ⋆ₚ)
 open import Function
-  renaming (id to id-fun; _∘_ to _o_)
-  hiding (left-unit; right-unit)
+  renaming (id to id-fun)
+  hiding (left-unit; right-unit; _∘_)
 
 Set' : Category (𝒰 ⁺) 𝒰
 obj ⦃ Set' {𝒰} ⦄ = 𝒰 ˙
-_~>_ ⦃ Set' ⦄ X Y = (x : X) → Y
+_~>_ ⦃ Set' ⦄ X Y = X → Y
 id ⦃ Set' ⦄ X = id-fun
-_∘_ ⦃ Set' ⦄ g f = g o f
-left-unit ⦃ Set' ⦄ f = refl f
-right-unit ⦃ Set' ⦄ f = refl f
-assoc ⦃ Set' ⦄ h g f = refl (h o g o f)
+_∘_ ⦃ Set' ⦄ = _∘ₛ_
+left-unit ⦃ Set' ⦄ = refl
+right-unit ⦃ Set' ⦄ = refl
+assoc ⦃ Set' ⦄ _ _ _ = refl _
 
-open import Relation.Binary.Property
+open import Isomorphism using (iso)
 open import Proof hiding (_$_)
-open import Proposition.Sum using (elem; prop; Σₚ)
-open import Function.Extensionality
-open import Isomorphism
+open import Proposition.Sum
+
+open import Axiom.FunctionExtensionality
 
 private
   instance
     _ = Set'
+
+open import Function.BijectionEquivalence
 
 iso-in-Set : {X Y : 𝒰 ˙} (f : (x : X) → Y) → iso f ↔ Bijective f
 ⟶ (iso-in-Set f) (g , (f∘g==id , g∘f==id)) = record {}
@@ -36,18 +38,19 @@ iso-in-Set : {X Y : 𝒰 ˙} (f : (x : X) → Y) → iso f ↔ Bijective f
           surject : Surjective f
           inj ⦃ inject ⦄ {x} {y} fx==fy =
             proof x
-              〉 _==_ 〉 g (f x) :by: ap (_$ x) (sym g∘f==id)
+              〉 _==_ 〉 g (f x) :by: ==→~ (sym g∘f==id) x
               〉 _==_ 〉 g (f y) :by: ap g fx==fy
-              〉 _==_ 〉 y       :by: ap (_$ y) g∘f==id
+              〉 _==_ 〉 y       :by: ==→~ g∘f==id y
             qed
-          sur ⦃ surject ⦄ y = g y , ap (_$ y) f∘g==id
+          surj ⦃ surject ⦄ y = g y , ==→~ f∘g==id y
 ⟵ (iso-in-Set {X = X} {Y} f) q =
-  elem o inv ,
-  (fun-ext (λ y → prop (inv y)) ,
-   fun-ext (λ x → inj (prop (inv (f x)))))
-  where open import Axiom.Choice
-        inv : (y : Y) → Σₚ λ x → f x == y
-        inv y = choice (sur y)
+  back , (fun-ext right-inv , fun-ext left-inv)
+  where instance
+          _ = q
+          b : Bijection X Y
+          b = bijection-of-bijective f ⦃ q ⦄
+          _ = inverse-right ⦃ bi-inverse ⦃ b ⦄ ⦄
+          _ = inverse-left ⦃ bi-inverse ⦃ b ⦄ ⦄
 
 -- open import Construction.Terminal
 

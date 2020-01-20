@@ -43,7 +43,7 @@ RepresentableFunctor-contrav _[—,_] :
 RepresentableFunctor-contrav = _[—,_]
 
 open import Category.Product
-open import Type.Sum hiding (_×_)
+open import Type.Sum hiding (_×_; _,_)
 open import Proof
 
 _[—,—] :
@@ -51,14 +51,14 @@ _[—,—] :
   → ----------------------
   Functor (ℂ ᵒᵖ × ℂ) Set'
 ℂ [—,—] = record
-  { F₀ = λ { (X , Y) → X ~> Y }
-  ; F₁ = λ { (f , f') g → f' ∘ g ∘ f }
-  ; id-preserv = λ { (X , X') → fun-ext λ X~>X' →
+  { F₀ = λ { (X Σ., Y) → X ~> Y }
+  ; F₁ = λ { (f Σ., f') g → f' ∘ g ∘ f }
+  ; id-preserv = λ { (X Σ., X') → fun-ext λ X~>X' →
       proof id X' ∘ X~>X' ∘ id X
         〉 _==_ 〉 X~>X' ∘ id X :by: ap (_∘ id X) $ left-unit X~>X'
         〉 _==_ 〉 X~>X'       :by: right-unit X~>X'
       qed }
-  ; ∘-preserv = λ { (g , g') (f , f') → fun-ext λ h →
+  ; ∘-preserv = λ { (g Σ., g') (f Σ., f') → fun-ext λ h →
       proof (g' ∘ f') ∘ h ∘ (f ∘ g)
         〉 _==_ 〉 g' ∘ f' ∘ h ∘ f ∘ g   :by: assoc _ f g
         〉 _==_ 〉 g' ∘ (f' ∘ h) ∘ f ∘ g
@@ -104,27 +104,57 @@ YonedaEmbedding {𝒰}{𝒱} ℂ = record
           }
 YonedaFunctor = YonedaEmbedding
 
+open import Function using (==→~)
+open import Logic
+open import Functor.Property
 
-
--- TODO: redesign universe level to be able to capture Nat[_[—,--],--]
-{-
-open import Isomorphism.Natural
-
-Nat[_[—,--],--] :
+Yoneda-full :
   (ℂ : Category 𝒰 𝒱)
-  → ------------------------------
-  Functor (FunCategory (ℂ ᵒᵖ) (Set' {𝒱}) × ℂ ᵒᵖ) (Set' {𝒱})
-Nat[ ℂ [—,--],--] = record
-  { F₀ = λ { (F , X) → {!ℂ [—, X ] ⟹ F!} }
-  ; F₁ = {!!}
-  ; id-preserv = {!!}
-  ; ∘-preserv = {!!}
-  }
+  → -----------------------------
+  full (YonedaFunctor ℂ)
+Yoneda-full ℂ {X}{Y} h =
+  f ,
+  ⟹== (F₁ f) h (fun-ext λ Z → fun-ext λ g →
+    proof (h at X) (id X) ∘ g
+      === (h at Z) (id X ∘ g)
+        :by: sym $ ==→~ (naturality ⦃ h ⦄ g) (id X)
+      === (h at Z) g
+        :by: ap (h at Z) $ left-unit g
+    qed)
+  where instance _ = ℂ; _ = YonedaFunctor ℂ; _ = h
+        f = (h at X) (id X)
+
+Yoneda-faithful :
+  (ℂ : Category 𝒰 𝒱)
+  → -----------------------------
+  faithful (YonedaFunctor ℂ)
+Yoneda-faithful ℂ {X}{Y} f g p =
+  proof f
+    === f ∘ id X :by: sym $ right-unit f
+    === g ∘ id X :by: ==→~ (==→~ (ap _at_ p) X) (id X)
+    === g        :by: right-unit g
+  qed
   where instance _ = ℂ
 
-YonedaLemma-nat :
-  (ℂ : Category 𝒰 𝒱)
-  → ------------------------------------------
-  Nat[ ℂ [—,--],--] nat-≅ App (ℂ ᵒᵖ) (Set' {𝒱})
-YonedaLemma-nat = {!!}
--}
+-- -- TODO: redesign universe level to be able to capture Nat[_[—,--],--]
+
+-- open import Isomorphism.Natural
+
+-- Nat[_[—,--],--] :
+--   (ℂ : Category 𝒰 𝒱)
+--   → ------------------------------
+--   Functor (FunCategory (ℂ ᵒᵖ) (Set' {𝒱}) × ℂ ᵒᵖ) (Set' {𝒱})
+-- Nat[ ℂ [—,--],--] = record
+--   { F₀ = λ { (F , X) → {!ℂ [—, X ] ⟹ F!} }
+--   ; F₁ = {!!}
+--   ; id-preserv = {!!}
+--   ; ∘-preserv = {!!}
+--   }
+--   where instance _ = ℂ
+
+-- YonedaLemma-nat :
+--   (ℂ : Category 𝒰 𝒱)
+--   → ------------------------------------------
+--   Nat[ ℂ [—,--],--] nat-≅ App (ℂ ᵒᵖ) (Set' {𝒱})
+-- YonedaLemma-nat = {!!}
+

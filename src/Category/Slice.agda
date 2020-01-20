@@ -32,8 +32,9 @@ open import Relation.Binary.Property using (sym)
 
 SliceFunctor :
   {ℂ : Category 𝒰 𝒱}
-  {A B : obj ⦃ ℂ ⦄}
-  (f : mor ⦃ ℂ ⦄ A B)
+  → let instance _ = ℂ in
+  {A B : obj}
+  (f : A ~> B)
   → -----------------------
   Functor (ℂ ╱ A) (ℂ ╱ B)
 SliceFunctor {ℂ = ℂ} f₁ = record
@@ -43,7 +44,7 @@ SliceFunctor {ℂ = ℂ} f₁ = record
       〉 _==_ 〉 f₁ ∘ (g ∘ i) :by: sym (assoc f₁ g i)
       〉 _==_ 〉 f₁ ∘ f       :by: ap (f₁ ∘_) p
     qed) }
-  ; id-preserv = λ { (X , _) → Σₚ== (refl (id X)) }
-  ; ∘-preserv = λ { (i₁ ,, p₁) (i₂ ,, p₂) → Σₚ== (refl (i₁ ∘ i₂)) }
+  ; id-preserv = λ { (X , _) → Σₚ== (Id.refl (id X)) }
+  ; ∘-preserv = λ { (i₁ ,, p₁) (i₂ ,, p₂) → Σₚ== (Id.refl (i₁ ∘ i₂)) }
   }
   where instance _ = ℂ
