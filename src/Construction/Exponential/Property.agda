@@ -2,19 +2,30 @@
 open import PropUniverses
 open import Category
 open import Construction.Product
+  using (HasProducts; _×_; _⊠_; 〈_,_〉; π₁; π₂; 〈π₁,π₂〉==id; ⊠-compose; ⊠-id)
 import Construction.Exponential.Definition as ExpDef
 
+open import Isomorphism
 module Construction.Exponential.Property where
 
 open import Proposition.Identity renaming (Idₚ to Id) hiding (refl) 
 open import Proposition.Sum
-open import Construction.Product.Unsafe
 open import Axiom.UniqueChoice
 
 HasExponentials : (ℂ : Category 𝒲 𝒯) ⦃ _ : HasProducts ℂ ⦄ → 𝒲 ⊔ 𝒯 ˙
 HasExponentials ℂ = ∀ {A B : obj } → Exponential A B
   where instance _ = ℂ
         open ExpDef
+
+open import Construction.Terminal
+
+record CartesianClosed (ℂ : Category 𝒲 𝒯) : 𝒲 ⊔ 𝒯 ˙ where
+  private
+    instance _ = ℂ
+  field
+    ⦃ terminal ⦄ : Terminal
+    ⦃ products ⦄ : HasProducts ℂ
+    ⦃ exponents ⦄ : HasExponentials ℂ
 
 open import Proof
     

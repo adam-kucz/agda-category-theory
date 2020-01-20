@@ -8,7 +8,7 @@ module Construction.Exponential.Definition
   ⦃ P : HasProducts ℂ ⦄
   where
 
-open import Construction.Product.Unsafe
+open import Construction.Product
 open import Proposition.Identity
 open import Logic
 

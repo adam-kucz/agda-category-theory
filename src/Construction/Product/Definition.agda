@@ -106,3 +106,8 @@ module WithFixedCategory ⦃ ℂ : Category 𝒰 𝒱 ⦄ where
        uniq h' λ { ₀ → f==π₁∘h' ; ₁ → g==π₂∘h'}})
 
 open WithFixedCategory public
+
+HasProducts : (ℂ : Category 𝒲 𝒯) → 𝒲 ⊔ 𝒯 ˙
+HasProducts ℂ = ∀ {A B : obj} → Product A B
+  where instance _ = ℂ
+

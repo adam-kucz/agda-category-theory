@@ -9,11 +9,11 @@ open import Functor.Empty
 open import Functor.Constant
 open import NaturalTransformation.Empty
 
-open import Construction.Cone.Universal ⦃ ℂ ⦄ 𝟘
+open import Construction.Cone.Universal
 
 IsTerminal : (𝟙 : obj) → 𝒰 ⊔ 𝒱 ᵖ
 IsTerminal 𝟙 =
-  IsUniversalCone {D = EmptyFunctor ℂ} 𝟙 (EmptyNatTrans (Const 𝟘 𝟙))
+  IsUniversalCone 𝟘 {D = EmptyFunctor ℂ} 𝟙 (EmptyNatTrans (Const 𝟘 𝟙))
 
 record Terminal : 𝒰 ⊔ 𝒱 ˙ where
   field
