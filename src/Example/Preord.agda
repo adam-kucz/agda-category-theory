@@ -13,8 +13,9 @@ open import Proof
 
 Preord : Category (𝒰 ⁺ ⊔ 𝒱 ⁺) (𝒰 ⊔ 𝒱)
 obj ⦃ Preord {𝒰}{𝒱} ⦄ = Σ λ (X : 𝒰 ˙) → Preorder 𝒱 X
-_~>_ ⦃ Preord ⦄ X Y = Σₚ λ (f : (x : pr₁ X) → pr₁ Y) → monotone f
-  where instance _ = pr₂ X; _ = pr₂ Y
+_~>_ ⦃ Preord ⦄ (X Σ., X-pre) (Y Σ., Y-pre) =
+  Σₚ λ (f : (x : X) → Y) → monotone _⊑_ _⊑_ ⦃ def ⦄ ⦃ def ⦄ f
+  where instance _ = X-pre; _ = Y-pre
 id ⦃ Preord ⦄ _ =
   id-fun ,
   record { rel-preserv = λ a⊑b → a⊑b }
@@ -27,12 +28,28 @@ right-unit ⦃ Preord ⦄ = refl
 assoc ⦃ Preord ⦄ _ _ _ = Σₚ== (refl _)
 
 module WithFixedUnvierse {𝒰}{𝒱} where
-  open import Functor
-  open import Example.Set'
+  private instance Preord' = Preord {𝒰}{𝒱}
 
-  private
-    Preord' = Preord {𝒰}{𝒱}
-    Set'' = Set' {𝒰}
+  open import Construction.Cone.Universal
+  open import Construction.Terminal
+
+  open import Logic
+  open import Axiom.FunctionExtensionality
+
+  terminal : ∀ {X : obj} →
+    (∃ λ (c : pr₁ X) → (x : pr₁ X) → c == x)
+    ↔
+    IsTerminal X
+  to-universal ⦃ ⟶ terminal (c , c==) ⦄ _ =
+    (λ _ → c) ,
+    record { rel-preserv = λ _ → refl c } ,
+    ((λ ()) , λ { (f , _) _ → Σₚ== $ fun-ext λ x → sym $ c== (f x) })
+  ⟵ terminal univ = {!!} , {!!}
+
+  open import Functor
+  open import Example.Set' hiding (terminal)
+
+  private instance Set'' = Set' {𝒰}
 
   forgetful : Functor Preord' Set''
   F₀ ⦃ forgetful ⦄ = pr₁

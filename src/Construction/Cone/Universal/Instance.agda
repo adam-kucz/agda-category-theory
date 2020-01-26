@@ -1,18 +1,14 @@
 {-# OPTIONS --exact-split --safe --prop #-}
 open import PropUniverses
 open import Category
+open import Construction.Cone.Definition
 
-module Construction.Terminal.Definition ⦃ ℂ : Category 𝒰 𝒱 ⦄ where
-
-𝕀 : Category 𝒰₀ 𝒰₀
-𝕀 = 𝟘
-  where open import Category.Empty
-
-open import Construction.Cone.Definition 𝕀
-
-TerminalDiagram : Diagram
-TerminalDiagram = EmptyFunctor ℂ
-  where open import Functor.Empty
+module Construction.Cone.Universal.Instance
+  ⦃ ℂ : Category 𝒰 𝒱 ⦄
+  (𝕀 : Category 𝒰₀ 𝒰₀)
+  (A : 𝒲 ˙ → 𝒯 ˙)
+  (D : A (Diagram 𝕀))
+  where
 
 TerminalCone : (𝟙 : obj) → Cone TerminalDiagram 𝟙
 TerminalCone 𝟙 = EmptyNatTrans (Const 𝕀 𝟙)

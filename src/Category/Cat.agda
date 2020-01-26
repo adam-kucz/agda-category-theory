@@ -27,17 +27,17 @@ open import Type.Unit renaming (𝟙 to Unit)
 open import Logic
 open import Functor.Extensionality
 
-terminal : IsTerminal 𝟙-Cat
-IsTerminal.to-terminal terminal 𝔻 =
-  Const 𝔻 ⋆ ,
-  λ F → funct-ext F (Const 𝔻 ⋆)
-    (λ X → subsingleton (F₀ ⦃ F ⦄ X) ⋆)
-    (λ f → subsingleton (F₁ ⦃ F ⦄ f) ⋆)
+-- terminal : IsTerminal 𝟙-Cat
+-- IsTerminal.to-terminal terminal 𝔻 =
+--   Const 𝔻 ⋆ ,
+--   λ F → funct-ext F (Const 𝔻 ⋆)
+--     (λ X → subsingleton (F₀ ⦃ F ⦄ X) ⋆)
+--     (λ f → subsingleton (F₁ ⦃ F ⦄ f) ⋆)
 
-open import Type.Empty renaming (𝟘 to ∅) using ()
-open import Construction.Initial
+-- open import Type.Empty renaming (𝟘 to ∅) using ()
+-- open import Construction.Initial
 
-initial : IsInitial 𝟘-Cat
-IsTerminal.to-terminal initial ℂ =
-  Trivial ℂ ,
-  λ F → funct-ext F (Trivial ℂ) (λ ()) (λ { {()} })
+-- initial : IsInitial 𝟘-Cat
+-- IsTerminal.to-terminal initial ℂ =
+--   Trivial ℂ ,
+--   λ F → funct-ext F (Trivial ℂ) (λ ()) (λ { {()} })

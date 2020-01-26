@@ -5,14 +5,14 @@ open import Category
 module Construction.Terminal.Equivalence ⦃ ℂ : Category 𝒰 𝒱 ⦄ where
 
 open import Construction.Terminal.Definition ⦃ ℂ ⦄
-open import Construction.Naive.Terminal ⦃ ℂ ⦄ renaming (
-  IsTerminal to IsNaiveTerminal;
+open import Construction.Simple.Terminal ⦃ ℂ ⦄ renaming (
+  IsTerminal to IsSimpleTerminal;
   Terminal to NaiveTerminal;
   𝟙 to 𝟙′
   )
 
 private
-  to-terminal = IsNaiveTerminal.to-terminal
+  to-terminal = IsSimpleTerminal.to-terminal
 
 open import Logic
 open import Proposition.Unique
@@ -25,13 +25,13 @@ open import Construction.Cone.Universal
 
 open import Axiom.UniqueChoice
 
-IsTerminal↔IsNaiveTerminal : (T : obj) → IsTerminal T ↔ IsNaiveTerminal T
-IsNaiveTerminal.to-terminal (⟶ (IsTerminal↔IsNaiveTerminal T) univ) X =
+IsTerminal↔IsSimpleTerminal : (T : obj) → IsTerminal T ↔ IsSimpleTerminal T
+IsSimpleTerminal.to-terminal (⟶ (IsTerminal↔IsSimpleTerminal T) univ) X =
   elem f-def ,
   λ y → ∧right (prop f-def) y (λ ())
   where instance _ = univ
-        f-def = !choice (is-universal (EmptyNatTrans (Const 𝟘 X)))
-is-universal ⦃ ⟵ (IsTerminal↔IsNaiveTerminal T) q ⦄ {X} c =
+        f-def = !choice (to-universal (EmptyNatTrans (Const 𝟘 X)))
+to-universal ⦃ ⟵ (IsTerminal↔IsSimpleTerminal T) q ⦄ {X} c =
   !get uniq ,
   ((λ ()) ,
    λ f′ _ → !prop uniq f′ )

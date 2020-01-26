@@ -14,7 +14,7 @@ funct-ext :
   {𝔻 : Category 𝒲 𝒯}
   (F G : Functor ℂ 𝔻)
   (p₁ : ∀ X → F₀ ⦃ F ⦄ X == F₀ ⦃ G ⦄ X)
-  (p₂ : ∀ {X Y} (f : mor ⦃ ℂ ⦄ X Y) → F₁ ⦃ F ⦄ f == F₁ ⦃ G ⦄ f)
+  (p₂ : ∀ {X Y} (f : mor ℂ X Y) → F₁ ⦃ F ⦄ f == F₁ ⦃ G ⦄ f)
   → -------------------------------------------------------------
   F == G
 funct-ext F G p₁ p₂ = Functor== F G

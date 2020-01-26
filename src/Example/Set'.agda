@@ -52,11 +52,20 @@ iso-in-Set : {X Y : 𝒰 ˙} (f : (x : X) → Y) → iso f ↔ Bijective f
           _ = inverse-right ⦃ bi-inverse ⦃ b ⦄ ⦄
           _ = inverse-left ⦃ bi-inverse ⦃ b ⦄ ⦄
 
--- open import Construction.Terminal
+open import Construction.Terminal hiding (𝟙)
+open import Construction.Cone.Universal
 
--- terminal : (p : Σₚ λ (c : X) → (x : X) → c == x) → IsTerminal X
--- IsTerminal.to-terminal (terminal (c , c==)) Y =
---   (λ _ → c) , λ f → fun-ext λ y → sym (c== (f y))
+open import Type.Unit
+
+terminal : (∃ λ (c : X) → (x : X) → c == x) ↔ IsTerminal X
+to-universal ⦃ ⟶ terminal (c , c==) ⦄ _ =
+  (λ _ → c) ,
+  ((λ ()) , λ f _ → fun-ext λ x → sym (c== (f x)))
+⟵ terminal univ with to-universal (TerminalCone (Lift𝒰 𝟙))
+  where instance _ = univ
+⟵ terminal univ | f , (_ , p) =
+  f (↑type ⋆) ,
+  λ x → sym (==→~ (p (λ _ → x) (λ ())) (↑type ⋆))
 
 -- open import Type.Empty renaming (𝟘 to ∅) using ()
 -- open import Construction.Initial
