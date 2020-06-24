@@ -12,7 +12,7 @@ record Functor
   : ----------------------------------------
   𝒰 ⊔ 𝒱 ⊔ 𝒲 ⊔ 𝒯 ˙
   where
-
+  constructor [F₀=_,F₁=_,id-pres=_,∘-pres=_]
   field
     F₀ : (X : obj ⦃ ℂ ⦄) → obj ⦃ 𝔻 ⦄
     -- F₁ : {X Y : obj} (f : X ~> Y) → F₀ X ~> F₀ Y
@@ -29,12 +29,15 @@ open Functor ⦃ … ⦄ public
 {-# DISPLAY Functor.F₀ F X = F X #-}
 {-# DISPLAY Functor.F₁ F f = F f #-}
 
+EndoFunctor : (ℂ : Category 𝒰 𝒱) → 𝒰 ⊔ 𝒱 ˙
+EndoFunctor ℂ = Functor ℂ ℂ
+
 Functor== :
   {ℂ : Category 𝒰 𝒱}
   {𝔻 : Category 𝒲 𝒯}
   (F G : Functor ℂ 𝔻)
   (p₁ : F₀ ⦃ F ⦄ == F₀ ⦃ G ⦄)
-  (p₂ : (λ {X Y} → F₁ ⦃ F ⦄ {X} {Y}) == (λ {X Y} → F₁ ⦃ G ⦄ {X} {Y}))
-  → -------------------------------------------------------------
+  (p₂ : (λ {X Y} → F₁ ⦃ F ⦄ {X} {Y}) Het.== (λ {X Y} → F₁ ⦃ G ⦄ {X} {Y}))
+  → -------------------------------------------------------------------------
   F == G
-Functor== F G (refl _) (refl _) = refl F
+Functor== F F (refl _) (Het.refl _) = refl F

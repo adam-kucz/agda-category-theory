@@ -20,11 +20,11 @@ _ᵒᵖ : (ℂ : Category 𝒰 𝒱) → Category 𝒰 𝒱
   }
   where instance _ = ℂ
 
-open import Function.Property using (Involutive; mk-involutive)
+-- open import Function.Property using (Involutive; mk-involutive)
 
-instance
-  Involutiveᵒᵖ : Involutive (_ᵒᵖ {𝒰} {𝒱})
-  Involutiveᵒᵖ = mk-involutive refl
+-- instance
+--   Involutiveᵒᵖ : Involutive (_ᵒᵖ {𝒰} {𝒱})
+--   Involutiveᵒᵖ = mk-involutive refl
 
 dual :
   {X : (ℂ : Category 𝒰 𝒱) → 𝒲 ˙}

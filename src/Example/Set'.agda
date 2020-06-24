@@ -6,9 +6,7 @@ open import Category
 open import Universes
 open import Proposition.Identity using (_==_; refl; ap)
 open import Logic using (_↔_; ⟶; ⟵; _,_; ⋆ₚ)
-open import Function
-  renaming (id to id-fun)
-  hiding (left-unit; right-unit; _∘_)
+open import Function renaming (id to id-fun) hiding (_∘_)
 
 Set' : Category (𝒰 ⁺) 𝒰
 obj ⦃ Set' {𝒰} ⦄ = 𝒰 ˙
@@ -36,15 +34,15 @@ iso-in-Set : {X Y : 𝒰 ˙} (f : (x : X) → Y) → iso f ↔ Bijective f
   where instance
           inject : Injective f
           surject : Surjective f
-          inj ⦃ inject ⦄ {x} {y} fx==fy =
-            proof x
-              〉 _==_ 〉 g (f x) :by: ==→~ (sym g∘f==id) x
-              〉 _==_ 〉 g (f y) :by: ap g fx==fy
-              〉 _==_ 〉 y       :by: ==→~ g∘f==id y
-            qed
-          surj ⦃ surject ⦄ y = g y , ==→~ f∘g==id y
+        inj ⦃ inject ⦄ {x} {y} fx==fy = subrel {_R_ = Het._==_} (
+          proof x
+            het== g (f x) :by: ==→~ (sym g∘f==id) x
+            het== g (f y) :by: ap g fx==fy
+            het== y       :by: ==→~ g∘f==id y
+          qed)
+        surj ⦃ surject ⦄ y = g y , subrel (==→~ f∘g==id y)
 ⟵ (iso-in-Set {X = X} {Y} f) q =
-  back , (fun-ext right-inv , fun-ext left-inv)
+  back , (subrel (fun-ext right-inv) , subrel (fun-ext left-inv))
   where instance
           _ = q
           b : Bijection X Y
@@ -60,12 +58,12 @@ open import Type.Unit
 terminal : (∃ λ (c : X) → (x : X) → c == x) ↔ IsTerminal X
 to-universal ⦃ ⟶ terminal (c , c==) ⦄ _ =
   (λ _ → c) ,
-  ((λ ()) , λ f _ → fun-ext λ x → sym (c== (f x)))
+  ((λ ()) , λ f _ → subrel (fun-ext λ x → subrel (sym (c== (f x)))))
 ⟵ terminal univ with to-universal (TerminalCone (Lift𝒰 𝟙))
   where instance _ = univ
 ⟵ terminal univ | f , (_ , p) =
   f (↑type ⋆) ,
-  λ x → sym (==→~ (p (λ _ → x) (λ ())) (↑type ⋆))
+  λ x → sym (subrel (==→~ (p (λ _ → x) (λ ())) (↑type ⋆)))
 
 -- open import Type.Empty renaming (𝟘 to ∅) using ()
 -- open import Construction.Initial

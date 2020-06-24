@@ -5,6 +5,7 @@ open import Functor.Construction.Definition
 
 open import Universes
 open import Proof
+open import Relation.Binary
 
 open import Category
 open import Functor.Definition
@@ -21,5 +22,5 @@ o-Const :
 o-Const ℂ {_}{𝔼} X F =
   Functor== (F o Const ℂ X) (Const ℂ {𝔼} (F₀ X))
     (refl (λ _ → F₀ X))
-    (ap (λ — → λ {_}{_} _ → —) (id-preserv X))
+    (subrel $ ap (λ — → λ {_}{_} _ → —) $ id-preserv X)
   where instance _ = F

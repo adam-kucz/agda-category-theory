@@ -4,7 +4,8 @@ open import Category
 open import Construction.Product.Definition
   as Prod hiding (〈_,_〉)
 
-module Construction.Product.Syntax ⦃ C : Category 𝒰 𝒱 ⦄ where
+module Construction.Product.Syntax {ℂ : Category 𝒰 𝒱} where
+private instance _ = ℂ
   
 open import Proposition.Identity
   renaming (Idₚ to Id) hiding (refl)

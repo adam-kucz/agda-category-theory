@@ -35,6 +35,9 @@ record Category (𝒰 𝒱 : Universe) : 𝒰 ⁺ ⊔ 𝒱 ⁺ ˙ where
 
 open Category ⦃ … ⦄ hiding (mor; dom; cod) public
 
+variable
+  ℂ 𝔻 𝔼 𝔽 ℂ' 𝔻' ℂ″ 𝔻″ ℂ₀ ℂ₁ ℂ₂ 𝔻₀ 𝔻₁ 𝔻₂ : Category 𝒰 𝒱
+
 compose :
   (ℂ : Category 𝒰 𝒱)
   → let instance _ = ℂ in

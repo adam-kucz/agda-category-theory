@@ -15,7 +15,7 @@ open import Proposition.Sum
 open import Data.List
 open import Data.FinNat
 open import Data.Nat hiding (_+_)
-open import Proof hiding (coe; coe-eval)
+open import Proof
 
 f+id : ∀ {m} (f : (a b : Finℕ m) → 𝒰 ˙)(a b : Finℕ m) → 𝒰 ˙
 f+id f a b = (Σₚ λ (_ : 𝟙) → (a == b)) + f a b

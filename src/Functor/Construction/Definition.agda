@@ -33,7 +33,7 @@ id-preserv ⦃ Id ℂ ⦄ X = refl (id ⦃ ℂ ⦄ X)
 
 open import Proof
 
-infixl 240 _o_
+infixl 242 _o_
 _o_ :
   {ℂ : Category 𝒰 𝒱}
   {𝔻 : Category 𝒲 𝒯}

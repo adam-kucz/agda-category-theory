@@ -5,7 +5,7 @@ open import Category
 open import Functor
 
 open import Universes
-open import Proposition.Identity renaming (Idₚ to Id) hiding (refl)
+open import Proposition.Identity hiding (refl)
 
 infix 215 _⟹_
 record _⟹_
@@ -72,7 +72,8 @@ open import Logic
 ⟹→NatTrans' {ℂ = ℂ} {𝔻} {F} {G} θ = record
   { ϕ = record
     { F₀ = λ X → F₀ ⦃ F ⦄ X — θ at X ➙ F₀ ⦃ G ⦄ X
-    ; F₁ = λ f → top= F₁ ⦃ F ⦄ f ,bot= F₁ ⦃ G ⦄ f ,[ Id.sym $ naturality ⦃ θ ⦄ f ]
+    ; F₁ = λ f → top= F₁ ⦃ F ⦄ f ,bot= F₁ ⦃ G ⦄ f
+                 ,[ sym $ naturality ⦃ θ ⦄ f ]
     ; id-preserv = λ X →
       ⟵ (CommutingSquare== ⦃ 𝔻 ⦄)
         (id-preserv ⦃ F ⦄ X , id-preserv ⦃ G ⦄ X)

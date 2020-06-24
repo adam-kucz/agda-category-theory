@@ -7,7 +7,7 @@ open import Universes
 module Category.ArrowCategory where
 
 open Arrow
-open import Proposition.Identity renaming (Idₚ to Id) hiding (refl)
+open import Proposition.Identity hiding (refl; Refl)
 
 private
   module WithFixedCategory ⦃ ℂ : Category 𝒰 𝒱 ⦄ where
@@ -22,7 +22,7 @@ private
     open CommutingSquare
     
     open import Logic
-    open import Proof
+    open import Proof hiding (Refl)
     
     CommutingSquare== :
       {f g : Arrow}
