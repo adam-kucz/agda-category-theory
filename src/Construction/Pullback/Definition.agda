@@ -135,3 +135,8 @@ module WithFixedCategory ⦃ ℂ : Category 𝒰 𝒱 ⦄ where
   Pullback f g = UniversalCone (PullbackDiagram f g)
 
 open WithFixedCategory public
+
+HasPullbacks : (ℂ : Category 𝒲 𝒯) → 𝒲 ⊔ 𝒯 ˙
+HasPullbacks ℂ = ∀{A B C : obj}{f : A ~> C}{g : B ~> C} → Pullback f g
+  where instance _ = ℂ
+

@@ -1,20 +1,18 @@
 {-# OPTIONS --exact-split --prop #-}
-open import PropUniverses
+open import Universes
 open import Category
+module Construction.Product.Syntax {ℂ : Category 𝒰 𝒱} where
+  
+open import Proposition.Sum
+open import Proof
+
+open import Axiom.UniqueChoice
+
 open import Construction.Product.Definition
   as Prod hiding (〈_,_〉)
 
-module Construction.Product.Syntax {ℂ : Category 𝒰 𝒱} where
-private instance _ = ℂ
-  
-open import Proposition.Identity
-  renaming (Idₚ to Id) hiding (refl)
-open import Proposition.Sum
-open import Axiom.UniqueChoice
-
-open import Proof
-
 private
+  instance _ = ℂ
   module Properties {A B : obj} ⦃ P : Product A B ⦄ where
 
     get-mor :
@@ -85,12 +83,12 @@ private
       〈 f , g 〉 ∘ i == 〈 f ∘ i , g ∘ i 〉
     product-compose f g i = prod-mor-uniq (f ∘ i) (g ∘ i) (〈 f , g 〉 ∘ i)
       (sym (proof π₁ ∘ (〈 f , g 〉 ∘ i)
-          〉 _==_ 〉 π₁ ∘ 〈 f , g 〉 ∘ i :by: assoc π₁ 〈 f , g 〉 i
-          〉 _==_ 〉 f ∘ i             :by: ap (_∘ i) $ sym $ π₁-prop f g
+          === π₁ ∘ 〈 f , g 〉 ∘ i :by: assoc π₁ 〈 f , g 〉 i
+          === f ∘ i             :by: ap (_∘ i) $ sym $ π₁-prop f g
         qed) ,
        sym (proof π₂ ∘ (〈 f , g 〉 ∘ i)
-          〉 _==_ 〉 π₂ ∘ 〈 f , g 〉 ∘ i :by: assoc π₂ 〈 f , g 〉 i
-          〉 _==_ 〉 g ∘ i             :by: ap (_∘ i) $ sym $ π₂-prop f g
+          === π₂ ∘ 〈 f , g 〉 ∘ i :by: assoc π₂ 〈 f , g 〉 i
+          === g ∘ i             :by: ap (_∘ i) $ sym $ π₂-prop f g [: _==_ ]
         qed))
 
 open Properties hiding (get-mor) public
@@ -112,31 +110,42 @@ f ⊠ g = 〈 f ∘ π₁ , g ∘ π₂ 〉
   (f  : Z ~> X)
   (g' : Y ~> B)
   (f' : W ~> Y)
-  ⦃ _ : Product Z W ⦄
-  ⦃ _ : Product X Y ⦄
-  ⦃ _ : Product A B ⦄
+  ⦃ Z×W : Product Z W ⦄
+  ⦃ X×Y : Product X Y ⦄
+  ⦃ A×B : Product A B ⦄
   → -------------------------------------
   (g ∘ f) ⊠ (g' ∘ f') == g ⊠ g' ∘ f ⊠ f'
-⊠-compose g f g' f' = 
+⊠-compose {X}{Y}{Z}{W} g f g' f' ⦃ Z×W ⦄ =
   proof (g ∘ f) ⊠ (g' ∘ f')
-    〉 _==_ 〉 〈 g ∘ f ∘ π₁ , g' ∘ f' ∘ π₂ 〉 :by: refl ((g ∘ f) ⊠ (g' ∘ f'))
-    〉 _==_ 〉 〈 g ∘ π₁ ∘ ff' , g' ∘ π₂ ∘ ff' 〉
+    === 〈 g ∘ f ∘ π₁ , g' ∘ f' ∘ π₂ 〉
+      :by: Id.refl ((g ∘ f) ⊠ (g' ∘ f'))
+    === 〈 g ∘ π₁' ∘ ff' , g' ∘ π₂' ∘ ff' 〉
       :by: prod-mor==
         (proof g ∘ f ∘ π₁
-           〉 _==_ 〉 g ∘ (f ∘ π₁)   :by: sym $ assoc g f π₁
-           〉 _==_ 〉 g ∘ (π₁ ∘ ff') :by: ap (g ∘_) $ π₁-prop (f ∘ π₁) (f' ∘ π₂)
-           〉 _==_ 〉 g ∘ π₁ ∘ ff'   :by: assoc g π₁ ff'
+           === g ∘ (f ∘ π₁)    :by: sym $ assoc g f _
+           === g ∘ (π₁' ∘ ff')
+             :by: ap (g ∘_) $ π₁-prop (f ∘ π₁ ⦃ P = Z×W ⦄)
+                                      (f' ∘ π₂ ⦃ P = Z×W ⦄)
+           === g ∘ π₁' ∘ ff'   :by: assoc g π₁' ff'
          qed)
-        (proof g' ∘ f' ∘ π₂
-           〉 _==_ 〉 g' ∘ (f' ∘ π₂)  :by: sym $ assoc g' f' π₂
-           〉 _==_ 〉 g' ∘ (π₂ ∘ ff') :by: ap (g' ∘_) $ π₂-prop (f ∘ π₁) (f' ∘ π₂)
-           〉 _==_ 〉 g' ∘ π₂ ∘ ff'   :by: assoc g' π₂ ff'
+        (proof g' ∘ f' ∘ π₂ ⦃ P = Z×W ⦄
+           === g' ∘ (f' ∘ π₂ ⦃ P = Z×W ⦄)   :by: sym $ assoc g' f' _
+           === g' ∘ (π₂' ∘ ff')
+             :by: ap (g' ∘_) $ π₂-prop (f ∘ π₁ ⦃ P = Z×W ⦄)
+                                       (f' ∘ π₂ ⦃ P = Z×W ⦄)
+           === g' ∘ π₂' ∘ ff'   :by: assoc g' π₂' ff'
          qed)
-    〉 _==_ 〉 〈 g ∘ π₁ , g' ∘ π₂ 〉 ∘ ff'
-      :by: sym (product-compose (g ∘ π₁) (g' ∘ π₂) ff')
-    〉 _==_ 〉 g ⊠ g' ∘ f ⊠ f' :by: refl (g ⊠ g' ∘ f ⊠ f')
+    === 〈 g ∘ π₁' , g' ∘ π₂'  〉 ∘ ff'
+      :by: sym $ product-compose (g ∘ π₁') (g' ∘ π₂') ff'
+    === g ⊠ g' ∘ f ⊠ f'
+      :by: Id.refl (g ⊠ g' ∘ f ⊠ f')
   qed
-  where ff' = 〈 f ∘ π₁ , f' ∘ π₂ 〉
+  where π₁' : X × Y ~> X
+        π₁' = π₁
+        π₂' : X × Y ~> Y
+        π₂' = π₂
+        ff' : Z × W ~> X × Y
+        ff' = 〈 f ∘ π₁ , f' ∘ π₂ 〉
 
 ⊠-id :
   (X X' : obj)
@@ -145,8 +154,8 @@ f ⊠ g = 〈 f ∘ π₁ , g ∘ π₂ 〉
   id X ⊠ id X' == id (X × X')
 ⊠-id X X' =
   proof id X ⊠ id X'
-    〉 _==_ 〉 〈 id X ∘ π₁ , id X' ∘ π₂ 〉 :by: refl (id X ⊠ id X')
-    〉 _==_ 〉 〈 π₁ , id X' ∘ π₂ 〉       :by: ap 〈_, id X' ∘ π₂ 〉 (left-unit π₁)
-    〉 _==_ 〉 〈 π₁ , π₂ 〉               :by: ap 〈 π₁ ,_〉 (left-unit π₂) 
-    〉 _==_ 〉 id (X × X')              :by: 〈π₁,π₂〉==id
+    === 〈 id X ∘ π₁ , id X' ∘ π₂ 〉 :by: refl (id X ⊠ id X')
+    === 〈 π₁ , id X' ∘ π₂ 〉       :by: ap 〈_, id X' ∘ π₂ 〉 (left-unit π₁)
+    === 〈 π₁ , π₂ 〉               :by: ap 〈 π₁ ,_〉 (left-unit π₂) 
+    === id (X × X')              :by: 〈π₁,π₂〉==id
   qed

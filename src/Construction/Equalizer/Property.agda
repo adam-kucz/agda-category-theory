@@ -13,15 +13,15 @@ open import Morphism.Mono
 open import Construction.Cone.Definition 𝕀
 open import Construction.Cone.Universal
 
-equalizer-is-mono : ⦃ C : Category 𝒰 𝒱 ⦄
+equalizer-is-monic : ⦃ C : Category 𝒰 𝒱 ⦄
   {E A : obj}
   {e : E ~> A}
   (p : ∃ λ (B : obj) →
        ∃ λ (f : A ~> B) →
        ∃ λ (g : A ~> B) → IsEqualizer f g E e)
   → --------------------------------------------------
-  mono e
-equalizer-is-mono {e = e} (B , (f , (g , (f∘e==g∘e , ucone))))
+  monic e
+equalizer-is-monic {e = e} (B , (f , (g , (f∘e==g∘e , ucone))))
   {Z}{g₁}{h₁} e∘g₁==e∘h₁ with to-universal econe
   where instance _ = ucone
         econe : Cone (EqualizerDiagram f g) Z

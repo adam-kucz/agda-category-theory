@@ -115,3 +115,8 @@ module WithFixedCategory ⦃ ℂ : Category 𝒰 𝒱 ⦄ where
   Equalizer f g = UniversalCone (EqualizerDiagram f g)
 
 open WithFixedCategory public
+
+HasEqualizers : (ℂ : Category 𝒲 𝒯) → 𝒲 ⊔ 𝒯 ˙
+HasEqualizers ℂ = ∀{A B : obj}{f g : A ~> B} → Equalizer f g
+  where instance _ = ℂ
+
