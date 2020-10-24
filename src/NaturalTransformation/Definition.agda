@@ -15,7 +15,7 @@ record _⟹_
   : ----------------------------------------
   𝒰 ⊔ 𝒱 ⊔ 𝒲 ⊔ 𝒯 ˙
   where
-
+  constructor [at=_,naturality=_]
   private
     instance _ = ℂ; _ = 𝔻; _ = F; _ = G
 

@@ -1,8 +1,8 @@
 {-# OPTIONS --safe --exact-split --prop  #-}
-module Isomorphism.Property where
+module Morphism.Iso.Property where
 
 open import Category
-open import Isomorphism.Definition
+open import Morphism.Iso.Definition
 
 open import Universes
 open import Logic using (_,_)
@@ -54,4 +54,3 @@ open import Proof
      〉 _==_ 〉 id X ∘ Y~>X           :by: ap (_∘ Y~>X) Y~>X'∘X~>Y'==id
      〉 _==_ 〉 Y~>X                 :by: left-unit Y~>X
     qed})
-

@@ -55,32 +55,32 @@ _~>_ ⦃ Finite _ f _ _ ⦄ = f+id f
 id ⦃ Finite _ _ _ _ ⦄ X = inl (⋆ , Idₚ.refl X)
 _∘_ ⦃ Finite _ f compose _ ⦄ = [ f , compose ]_o_
 left-unit ⦃ Finite _ f _ _ ⦄ {X}{Y} f₁ =
-  coe-eval (Idₚ.refl (f+id f X Y)) f₁
+  coe-eval-hom f₁
 right-unit ⦃ Finite _ f _ _ ⦄ (inl (⋆ , Idₚ.refl X)) =
-  coe-eval (Idₚ.refl _) (inl (⋆ , Idₚ.refl X))
-right-unit ⦃ Finite _ f _ _ ⦄ {X} {Y} (inr y) = coe-eval (Idₚ.refl _) (inr y)
+  coe-eval-hom (inl (⋆ , Idₚ.refl X))
+right-unit ⦃ Finite _ f _ _ ⦄ {X} {Y} (inr y) = coe-eval-hom (inr y)
 assoc ⦃ Finite m f c p ⦄ {X}{Y} (inl (⋆ , Idₚ.refl Z)) g f₀ =
   let _o_ = _∘_ ⦃ Finite m f c p ⦄ in
   proof coe (Idₚ.refl _) (g o f₀)
-    〉 _==_ 〉 g o f₀
-      :by: coe-eval (Idₚ.refl _) _
-    〉 _==_ 〉 coe (Idₚ.refl _) g o f₀
-      :by: ap (_o f₀) $ sym $ coe-eval (Idₚ.refl _) _
+    === g o f₀
+      :by: coe-eval-hom _
+    === coe (Idₚ.refl _) g o f₀
+      :by: ap (_o f₀) $ sym $ coe-eval-hom _
   qed
 assoc ⦃ Finite m f c p ⦄ (inr h) (inl (⋆ , Idₚ.refl Y)) f₀ =
   let _o_ = _∘_ ⦃ Finite m f c p ⦄ in
   proof inr h o coe (Idₚ.refl _) f₀
-    〉 _==_ 〉 inr h o f₀
-      :by: ap (inr h o_) $ coe-eval (Idₚ.refl _) _
-    〉 _==_ 〉 coe (Idₚ.refl _) (inr h) o f₀
-      :by: ap (_o f₀) $ sym $ coe-eval (Idₚ.refl _) _
+    === inr h o f₀
+      :by: ap (inr h o_) $ coe-eval-hom _
+    === coe (Idₚ.refl _) (inr h) o f₀
+      :by: ap (_o f₀) $ sym $ coe-eval-hom _
   qed
 assoc ⦃ Finite m f compose p ⦄ (inr h) (inr g) (inl (⋆ , Idₚ.refl X)) =
   let _o_ = _∘_ ⦃ Finite m f compose p ⦄ in
   proof inr h o coe (Idₚ.refl _) (inr g)
-    〉 _==_ 〉 compose h g
-      :by: ap (inr h o_) $ coe-eval (Idₚ.refl _) (inr g)
-    〉 _==_ 〉 compose h g o inl (⋆ , Idₚ.refl X)
+    === compose h g
+      :by: ap (inr h o_) $ coe-eval-hom (inr g)
+    === compose h g o inl (⋆ , Idₚ.refl X)
       :by: sym $ right-unit ⦃ Finite m f compose p ⦄ (compose h g)
   qed
 assoc ⦃ Finite _ f _ p ⦄ (inr h) (inr g) (inr f₀) = p h g f₀

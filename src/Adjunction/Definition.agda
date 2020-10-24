@@ -42,8 +42,7 @@ Adjunction== :
   A == B
 Adjunction== A A (Idₚ.refl _) (Idₚ.refl _) = Idₚ.refl A
 
-open import Function
-  hiding (_∘_; _$_; left-unit; right-unit)
+open import Function hiding (id; _∘_; _$_)
 open import Proof
 
 -- alternative definition
@@ -95,19 +94,19 @@ record _-|_
   right-extend-back f g =
     proof G1 g ∘ back f
       === back (forw (G1 g ∘ back f))
-        :by: sym $ left-inv (G1 g ∘ back f)
+        :by: sym $ subrel $ left-inv (G1 g ∘ back f)
       === back (forw (back (g ∘ f)))
         :by: ap back (
           proof forw (G1 g ∘ back f)
             === g ∘ forw (back f)
               :by: sym $ right-extend (back f) g
             === g ∘ f
-              :by: ap (g ∘_) $ right-inv f
+              :by: ap (g ∘_) $ subrel $ right-inv f
             === forw (back (g ∘ f))
-              :by: sym $ right-inv (g ∘ f)
+              :by: sym $ subrel $ right-inv (g ∘ f) [: _==_ ]
           qed)
       === back (g ∘ f)
-        :by: left-inv (back (g ∘ f))
+        :by: subrel $ left-inv (back (g ∘ f))
     qed
 
   left-extend-back : ∀ {X X' Y}
@@ -120,19 +119,19 @@ record _-|_
   left-extend-back f g =
     proof back f ∘ g
       === back (forw (back f ∘ g))
-        :by: sym $ left-inv (back f ∘ g)
+        :by: sym $ subrel $ left-inv (back f ∘ g)
       === back (forw (back (f ∘ F1 g)))
         :by: ap back (
         proof forw (back f ∘ g)
             === forw (back f) ∘ F1 g
               :by: sym $ left-extend (back f) g
             === f ∘ F1 g
-              :by: ap (_∘ F1 g) $ right-inv f
+              :by: ap (_∘ F1 g) $ subrel $ right-inv f
             === forw (back (f ∘ F1 g))
-              :by: sym $ right-inv (f ∘ F1 g)
+              :by: sym $ subrel $ right-inv (f ∘ F1 g) [: _==_ ]
           qed)
       === back (f ∘ F1 g)
-        :by: left-inv (back (f ∘ F1 g))
+        :by: subrel $ left-inv (back (f ∘ F1 g))
     qed
 
 ⊣→-| :
@@ -159,50 +158,66 @@ bi-inverse ⦃ _-|_.bijection (⊣→-| {ℂ = ℂ}{𝔻}{F}{G} A) X Y ⦄ =
     G1 = F₁ ⦃ G ⦄
     _ = _-|_.bijection (⊣→-| A) X Y
     left-inverse : LeftInverse forw back
-    left-inverse = record { left-inv = λ f →
+    left-inverse = record { left-inv = λ f → subrel (
       proof G1 (ε at Y ∘ F1 f) ∘ η at X
-        〉 _==_ 〉 G1 (ε at Y) ∘ G1 (F1 f) ∘ η at X
+        === G1 (ε at Y) ∘ G1 (F1 f) ∘ η at X
           :by: ap (_∘ η at X) $ ∘-preserv ⦃ G ⦄ (ε at Y) (F1 f)
-        〉 _==_ 〉 G1 (ε at Y) ∘ (G1 (F1 f) ∘ η at X)
+        === G1 (ε at Y) ∘ (G1 (F1 f) ∘ η at X)
           :by: sym $ assoc _ _ _
-        〉 _==_ 〉 G1 (ε at Y) ∘ (η at G0 Y ∘ f)
+        === G1 (ε at Y) ∘ (η at G0 Y ∘ f)
           :by: ap (G1 (ε at Y) ∘_) $ sym $ naturality ⦃ η ⦄ f
-        〉 _==_ 〉 G1 (ε at Y) ∘ η at G0 Y ∘ f
-          :by: assoc _ _ _
-        〉 _==_ 〉 left-compose G (ε) O right-compose (η) G
-                   at Y ∘ f
-          :by: refl _
-        〉 _==_ 〉 Identity G at Y ∘ f
+        === G1 (ε at Y) ∘ η at G0 Y ∘ f
+          :by: assoc (G1 (ε at Y)) (η at G0 Y) f
+        === (G1 (ε at Y) ∘ id (G0 (F0 (G0 Y)))) ∘
+            (G1 (F1 (id (G0 Y))) ∘ η at G0 Y) ∘
+            f
+          :by: ap2 (λ f₀ f₁ → f₀ ∘ f₁ ∘ f)
+                   (sym $ right-unit (G1 (ε at Y)))
+                   (proof η at G0 Y
+                      === id (G0 (F0 (G0 Y))) ∘ η at G0 Y
+                        :by: sym $ left-unit (η at G0 Y)
+                      === G1 (F1 (id (G0 Y))) ∘ η at G0 Y
+                        :by: ap (_∘ η at G0 Y) $
+                             sym $ id-preserv ⦃ G o F ⦄ (G0 Y)
+                             [: _==_ ]
+                    qed)
+        === left-compose G ε O right-compose η G at Y ∘ f
+          :by: Id.refl _
+        === Identity G at Y ∘ f
           :by: ap (λ — → — at Y ∘ f) $ axiom-G
-        〉 _==_ 〉 f :by: left-unit f
-      qed}
+        === f :by: left-unit f [: _==_ ]
+      qed)}
     right-inverse : RightInverse forw back
-    right-inverse = record { right-inv = λ f →
+    right-inverse = record { right-inv = λ f → subrel (
       proof ε at Y ∘ F1 (G1 f ∘ η at X)
-        〉 _==_ 〉 ε at Y ∘ (F1 (G1 f) ∘ F1 (η at X))
+        === ε at Y ∘ (F1 (G1 f) ∘ F1 (η at X))
           :by: ap (ε at Y ∘_) $ ∘-preserv ⦃ F ⦄ (G1 f) (η at X)
-        〉 _==_ 〉 ε at Y ∘ F1 (G1 f) ∘ F1 (η at X)
+        === ε at Y ∘ F1 (G1 f) ∘ F1 (η at X)
           :by: assoc _ _ _
-        〉 _==_ 〉 f ∘ ε at F0 X ∘ F1 (η at X)
+        === f ∘ ε at F0 X ∘ F1 (η at X)
           :by: ap (_∘ F1 (η at X)) $ naturality ⦃ ε ⦄ f
-        〉 _==_ 〉 f ∘ (ε at F0 X ∘ F1 (η at X))
-          :by: sym $ assoc _ _ _
-        〉 _==_ 〉 f ∘ right-compose (ε) F O left-compose F (η) at X
-          :by: refl _
-        〉 _==_ 〉 f ∘ Identity F at X
+        === f ∘ (ε at F0 X ∘ F1 (η at X))
+          :by: sym $ assoc f _ _
+        === f ∘ ((id (F0 X) ∘ ε at F0 X) ∘ (F1 (η at X) ∘ id (F0 X)))
+          :by: ap (f ∘_) $ sym $
+               ap2 _∘_ (left-unit (ε at F0 X))
+                       (right-unit (F1 (η at X)))
+        === f ∘ right-compose ε F O left-compose F η at X
+          :by: Id.refl _
+        === f ∘ Identity F at X
           :by: ap (λ — → f ∘ — at X) $ axiom-F
-        〉 _==_ 〉 f :by: right-unit f
-      qed}
+        === f :by: right-unit f [: _==_ ]
+      qed)}
   in record {}
 _-|_.right-extend (⊣→-| {ℂ = ℂ}{𝔻}{F}{G} A) {X}{Y}{Y'} X~>GY Y~>Y' =
   proof Y~>Y' ∘ (ε at Y ∘ F1 X~>GY)
-    〉 _==_ 〉 Y~>Y' ∘ ε at Y ∘ F1 X~>GY
+    === Y~>Y' ∘ ε at Y ∘ F1 X~>GY
       :by: assoc _ _ _
-    〉 _==_ 〉 ε at Y' ∘ F1 (G1 Y~>Y') ∘ F1 X~>GY
+    === ε at Y' ∘ F1 (G1 Y~>Y') ∘ F1 X~>GY
       :by: ap (_∘  F1 X~>GY) $ sym $ naturality ⦃ ε ⦄ Y~>Y'
-    〉 _==_ 〉 ε at Y' ∘ (F1 (G1 Y~>Y') ∘ F1 X~>GY)
+    === ε at Y' ∘ (F1 (G1 Y~>Y') ∘ F1 X~>GY)
       :by: sym $ assoc _ _ _
-    〉 _==_ 〉 ε at Y' ∘ F1 (G1 Y~>Y' ∘ X~>GY)
+    === ε at Y' ∘ F1 (G1 Y~>Y' ∘ X~>GY)
       :by: ap (ε at Y' ∘_) $ sym $ ∘-preserv _ _
   qed
   where instance _ = ℂ; _ = 𝔻; _ = F; _ = G; _ = A
@@ -212,9 +227,9 @@ _-|_.right-extend (⊣→-| {ℂ = ℂ}{𝔻}{F}{G} A) {X}{Y}{Y'} X~>GY Y~>Y' =
         G1 = F₁ ⦃ G ⦄
 _-|_.left-extend (⊣→-| {ℂ = ℂ}{𝔻}{F}{G} A){X'}{X}{Y} X~>GY X'~>X =
   proof ε at Y ∘ F1 X~>GY ∘ F1 X'~>X
-    〉 _==_ 〉 ε at Y ∘ (F1 X~>GY ∘ F1 X'~>X)
+    === ε at Y ∘ (F1 X~>GY ∘ F1 X'~>X)
       :by: sym $ assoc _ _ _
-    〉 _==_ 〉 ε at Y ∘ F1 (X~>GY ∘ X'~>X)
+    === ε at Y ∘ F1 (X~>GY ∘ X'~>X)
       :by: ap (ε at Y ∘_) $ sym $ ∘-preserv X~>GY X'~>X
   qed
   where instance _ = ℂ; _ = 𝔻; _ = F; _ = G; _ = A

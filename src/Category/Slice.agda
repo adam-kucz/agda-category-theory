@@ -1,5 +1,4 @@
 {-# OPTIONS --exact-split --safe --prop #-}
-
 module Category.Slice where
 
 open import Category.Definition
@@ -30,21 +29,22 @@ _╱_ : (ℂ : Category 𝒰 𝒱) (A : obj ⦃ ℂ ⦄) → Category (𝒰 ⊔ 
 open import Functor
 open import Relation.Binary.Property using (sym)
 
-SliceFunctor :
+CompositionFunctor :
   {ℂ : Category 𝒰 𝒱}
   → let instance _ = ℂ in
   {A B : obj}
   (f : A ~> B)
   → -----------------------
   Functor (ℂ ╱ A) (ℂ ╱ B)
-SliceFunctor {ℂ = ℂ} f₁ = record
-  { F₀ = λ { (X , f) → X , (f₁ ∘ f) }
+CompositionFunctor {ℂ = ℂ} f₁ = record
+  { F₀ = λ { (X , f) → X , f₁ ∘ f }
   ; F₁ = λ { {X , f} {Y , g} (i ,, p) → i ,,
     (proof f₁ ∘ g ∘ i
-      〉 _==_ 〉 f₁ ∘ (g ∘ i) :by: sym (assoc f₁ g i)
-      〉 _==_ 〉 f₁ ∘ f       :by: ap (f₁ ∘_) p
+      === f₁ ∘ (g ∘ i) :by: sym (assoc f₁ g i)
+      === f₁ ∘ f       :by: ap (f₁ ∘_) p
     qed) }
   ; id-preserv = λ { (X , _) → Σₚ== (Id.refl (id X)) }
   ; ∘-preserv = λ { (i₁ ,, p₁) (i₂ ,, p₂) → Σₚ== (Id.refl (i₁ ∘ i₂)) }
   }
   where instance _ = ℂ
+

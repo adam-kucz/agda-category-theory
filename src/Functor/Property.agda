@@ -34,7 +34,7 @@ full {ℂ = ℂ}{𝔻} F = ∀ {X Y : obj ⦃ ℂ ⦄}
   ∃ λ (f : X ~> Y) → F₁ f == h
   where instance _ = ℂ; _ = 𝔻; _ = F
 
-open import Isomorphism
+open import Morphism.Iso
 
 F-iso-is-iso :
   {ℂ : Category 𝒰 𝒱}

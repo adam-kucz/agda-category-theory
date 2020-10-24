@@ -100,7 +100,9 @@ HorizontalComposition==alternative :
   (X : obj ⦃ ℂ ⦄)
   → -------------------------------------------------------
   let instance _ = 𝔼 in
-  F₁ ⦃ G' ⦄ (ψ at X) ∘ ϕ at F₀ ⦃ F ⦄ X == ϕ at F₀ ⦃ F' ⦄ X ∘ F₁ ⦃ G ⦄ (ψ at X)
+  F₁ ⦃ G' ⦄ (ψ at X) ∘ ϕ at F₀ ⦃ F ⦄ X
+  ==
+  ϕ at F₀ ⦃ F' ⦄ X ∘ F₁ ⦃ G ⦄ (ψ at X)
 HorizontalComposition==alternative {𝔼 = 𝔼}{G}{G'}{F}{F'} ϕ ψ X =
   sym $ naturality ⦃ ϕ ⦄ (ψ at X)
   where instance _ = 𝔼

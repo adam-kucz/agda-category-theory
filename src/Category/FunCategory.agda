@@ -8,7 +8,7 @@ open import Category.ArrowCategory
 
 open import Universes hiding (X; Y; Z)
 open import Logic hiding (_,_)
-open import Proof hiding (Id)
+open import Proof
 
 open import Axiom.FunctionExtensionality
 
@@ -23,11 +23,12 @@ FunCategory ℂ 𝔻 = record
   ; id = Id
   ; _∘_ = _o_
   ; left-unit = λ {X} {Y} θ →
-    ⟹== (Id Y o θ) θ $ fun-ext λ _ → left-unit _
+    ⟹== (Id Y o θ) θ $ subrel $ fun-ext λ Z → subrel $ left-unit (θ at Z)
   ; right-unit = λ {F} {G} θ →
-    ⟹== (θ o Id F) θ $ fun-ext λ _ → right-unit _
+    ⟹== (θ o Id F) θ $ subrel $ fun-ext λ Z → subrel $ right-unit (θ at Z)
   ; assoc = λ ψ ϕ θ → 
-    ⟹== (ψ o (ϕ o θ)) ((ψ o ϕ) o θ) $ fun-ext λ _ → assoc _ _ _
+    ⟹== (ψ o (ϕ o θ)) ((ψ o ϕ) o θ) $
+      subrel $ fun-ext λ Z → subrel $ assoc (ψ at Z) (ϕ at Z) (θ at Z)
   }
   where instance _ = ℂ; _ = 𝔻
 
@@ -44,24 +45,24 @@ App ℂ 𝔻 = record
   ; F₁ = λ { {F , _}{_ , Y} (θ , f) → θ at Y ∘ F₁ ⦃ F ⦄ f }
   ; id-preserv = λ { (F , X) → let instance _ = F in
       proof id (F₀ _) ∘ F₁ (id X)
-        〉 _==_ 〉 id (F₀ _) ∘ id (F₀ X)
+        === id (F₀ _) ∘ id (F₀ X)
           :by: ap (id (F₀ _) ∘_) $ id-preserv X
-        〉 _==_ 〉 id (F₀ X) :by: left-unit (id (F₀ X))
+        === id (F₀ X) :by: left-unit (id (F₀ X))
       qed }
   ; ∘-preserv = λ { {F , X} {G , Y} {H , Z} (θ , g) (ψ , f) →
       let instance _ = F in
       proof (θ ∘ ψ) at Z ∘ F₁ (g ∘ f)
-        〉 _==_ 〉 θ at Z ∘ ψ at Z ∘ (F₁ g ∘ F₁ f)
+        === θ at Z ∘ ψ at Z ∘ (F₁ g ∘ F₁ f)
           :by: ap ((θ ∘ ψ) at Z ∘_) $ ∘-preserv g f
-        〉 _==_ 〉 θ at Z ∘ ψ at Z ∘ F₁ g ∘ F₁ f
+        === θ at Z ∘ ψ at Z ∘ F₁ g ∘ F₁ f
           :by: assoc _ _ _
-        〉 _==_ 〉 θ at Z ∘ (ψ at Z ∘ F₁ g) ∘ F₁ f
-          :by: ap (_∘ F₁ f) $ sym $ assoc _ _ _
-        〉 _==_ 〉 θ at Z ∘ (F₁ ⦃ G ⦄ g ∘ ψ at Y) ∘ F₁ f
+        === θ at Z ∘ (ψ at Z ∘ F₁ g) ∘ F₁ f
+          :by: ap (_∘ F₁ f) $ sym $ assoc (θ at Z) (ψ at Z) (F₁ g)
+        === θ at Z ∘ (F₁ ⦃ G ⦄ g ∘ ψ at Y) ∘ F₁ f
           :by: ap (λ — → θ at Z ∘ — ∘ F₁ f) $ naturality ⦃ ψ ⦄ g
-        〉 _==_ 〉 θ at Z ∘ F₁ ⦃ G ⦄ g ∘ ψ at Y ∘ F₁ f
-          :by: ap (_∘ F₁ f) $ assoc _ _ _
-        〉 _==_ 〉 (θ at Z ∘ F₁ ⦃ G ⦄ g) ∘ (ψ at Y ∘ F₁ f)
+        === θ at Z ∘ F₁ ⦃ G ⦄ g ∘ ψ at Y ∘ F₁ f
+          :by: ap (_∘ F₁ f) $ assoc (θ at Z) (F₁ ⦃ G ⦄ g) (ψ at Y)
+        === (θ at Z ∘ F₁ ⦃ G ⦄ g) ∘ (ψ at Y ∘ F₁ f)
           :by: sym $ assoc _ _ _
       qed}
   }
@@ -75,15 +76,16 @@ Cur {ℂ = ℂ}{𝔻 = 𝔻}{𝔼 = 𝔼} F =
   [F₀= with-left
   ,F₁= nat-trans
   ,id-pres= (λ X → ⟹== (nat-trans (id X)) (Id (with-left X)) $
-               fun-ext λ Y → id-preserv (X , Y))
+               subrel $ fun-ext λ Y → subrel $ id-preserv (X , Y))
   ,∘-pres= (λ g f → ⟹== (nat-trans (g ∘ f)) (nat-trans g o nat-trans f) $
-              fun-ext λ Y →
+              subrel $ fun-ext λ Y → subrel (
                 proof F₁ (g ∘ f , id Y)
                   === F₁ (g ∘ f , id Y ∘ id Y)
-                    :by: ap (λ — → F₁ (g ∘ f , —)) $ sym $ left-unit (id Y)
+                    :by: ap (λ — → F₁ (g ∘ f , —)) $
+                         sym $ left-unit (id ⦃ 𝔻 ⦄ Y)
                   === F₁ (g , id Y) ∘ F₁ (f , id Y)
-                    :by: ∘-preserv (g , id Y) (f , id Y) 
-                qed) ]
+                    :by: ∘-preserv (g , id Y) (f , id Y) [: _==_ ]
+                qed)) ]
   where instance _ = ℂ; _ = 𝔻; _ = 𝔼; _ = F
         with-left : (X : obj ⦃ ℂ ⦄) → Functor 𝔻 𝔼
         with-left X =

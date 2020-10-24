@@ -1,7 +1,7 @@
 {-# OPTIONS --exact-split --prop #-}
-module Isomorphism.Natural where
+module Morphism.Iso.Natural where
 
-open import Isomorphism.Definition
+open import Morphism.Iso.Definition
 
 open import PropUniverses
 open import Category

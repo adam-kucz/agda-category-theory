@@ -22,8 +22,9 @@ record Category (𝒰 𝒱 : Universe) : 𝒰 ⁺ ⊔ 𝒱 ⁺ ˙ where
       → -----------------------------
       h ∘ (g ∘ f) == (h ∘ g) ∘ f
 
-  mor : (X Y : obj) → 𝒱 ˙
+  mor Hom : (X Y : obj) → 𝒱 ˙
   mor = _~>_
+  Hom = mor
 
   syntax mor ℂ A B = A ~[ ℂ ]~> B
 

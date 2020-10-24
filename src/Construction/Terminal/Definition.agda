@@ -29,3 +29,8 @@ Terminal = UniversalCone TerminalDiagram
 
 𝟙 : ⦃ _ : Terminal ⦄ → obj
 𝟙 = U
+
+global-element-of point-of constant-of : ⦃ _ : Terminal ⦄ (X : obj) → 𝒱 ˙
+global-element-of = 𝟙 ~>_
+point-of = global-element-of
+constant-of = global-element-of

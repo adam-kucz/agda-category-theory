@@ -17,7 +17,7 @@ left-unit ⦃ Set' ⦄ = refl
 right-unit ⦃ Set' ⦄ = refl
 assoc ⦃ Set' ⦄ _ _ _ = refl _
 
-open import Isomorphism using (iso)
+open import Morphism.Iso using (iso)
 open import Proof hiding (_$_)
 open import Proposition.Sum
 
@@ -34,7 +34,7 @@ iso-in-Set : {X Y : 𝒰 ˙} (f : (x : X) → Y) → iso f ↔ Bijective f
   where instance
           inject : Injective f
           surject : Surjective f
-        inj ⦃ inject ⦄ {x} {y} fx==fy = subrel {_R_ = Het._==_} (
+        inj ⦃ inject ⦄ {x} {y} fx==fy = subrel {sub = Het._==_} (
           proof x
             het== g (f x) :by: ==→~ (sym g∘f==id) x
             het== g (f y) :by: ap g fx==fy

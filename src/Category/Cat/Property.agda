@@ -1,20 +1,12 @@
 {-# OPTIONS --exact-split --prop #-}
-module Category.Cat where
+module Category.Cat.Property where
 
-open import Category.Definition
+open import Category
+open import Category.Cat.Definition
 open import Functor renaming (Id to FunctorId)
 
 open import Universes
 open import Proof
-
-CatCategory : Category (𝒰 ⁺ ⊔ 𝒱 ⁺) (𝒰 ⊔ 𝒱)
-obj ⦃ CatCategory {𝒰} {𝒱} ⦄ = Category 𝒰 𝒱
-_~>_ ⦃ CatCategory ⦄ = Functor
-id ⦃ CatCategory ⦄ = FunctorId
-_∘_ ⦃ CatCategory ⦄ = _o_
-left-unit ⦃ CatCategory ⦄ f = refl f
-right-unit ⦃ CatCategory ⦄ f = refl f
-assoc ⦃ CatCategory ⦄ h g f = refl (h o (g o f))
 
 private
   instance
@@ -31,24 +23,6 @@ open import Construction.Product.Definition hiding (_×_; 〈_,_〉)
 open import Construction.Cone.Universal
 
 open import Functor.Extensionality
-
-private
-  pi₁ :
-    (ℂ : Category 𝒰 𝒱)
-    (𝔻 : Category 𝒰 𝒱)
-    → --------------------
-    Functor (ℂ × 𝔻) ℂ
-  pi₁ ℂ 𝔻 = [F₀= pr₁ ,F₁= pr₁
-            ,id-pres= (λ _ → refl _)
-            ,∘-pres= (λ _ _ → refl _) ]
-  pi₂ :
-    (ℂ : Category 𝒰 𝒱)
-    (𝔻 : Category 𝒰 𝒱)
-    → --------------------
-    Functor (ℂ × 𝔻) 𝔻
-  pi₂ ℂ 𝔻 = [F₀= pr₂ ,F₁= pr₂
-            ,id-pres= (λ _ → refl _)
-            ,∘-pres= (λ _ _ → refl _) ]
 
 open import Axiom.FunctionExtensionality
 
