@@ -13,9 +13,6 @@ open import Category.Finite
 𝕀 = Finite 2 (λ _ _ → 𝟘) (λ ()) (λ ())
 
 module WithFixedCategory ⦃ ℂ : Category 𝒰 𝒱 ⦄ where
-
-  open import Proposition.Identity
-    renaming (Idₚ to Id) hiding (refl)
   open import Construction.Cone.Definition 𝕀
     
   open import Functor

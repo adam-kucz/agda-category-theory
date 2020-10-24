@@ -84,8 +84,8 @@ module WithFixedCategory ⦃ ℂ : Category 𝒰 𝒱 ⦄ where
     (p : f ∘ e == g ∘ e)
     → -------------------------
     Cone (EqualizerDiagram f g) E
-  (EqualizerCone e _) at ₀ = e
-  (EqualizerCone {f = f} e _) at ₁ = f ∘ e
+  EqualizerCone e _ at ₀ = e
+  EqualizerCone {f = f} e _ at ₁ = f ∘ e
   _⟹_.naturality (EqualizerCone e _) {₀} {₀} _ = sym $ bi-unit e
   _⟹_.naturality (EqualizerCone {f = f} e _) {₁} {₁} _ =
     sym $ bi-unit (f ∘ e)
