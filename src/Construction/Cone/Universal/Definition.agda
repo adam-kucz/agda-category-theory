@@ -10,7 +10,7 @@ module Construction.Cone.Universal.Definition
 open import NaturalTransformation
 open import Construction.Cone.Definition 𝕀
 
-open import Proposition.Identity hiding (refl)
+open import Proposition.Identity
 open import Logic
 
 record IsUniversalCone
