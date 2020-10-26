@@ -49,22 +49,20 @@ open import Morphism.Iso
 TTerminal→Terminal : (T : T.Terminal) → Terminal
 TTerminal→Terminal T@(_ , p) =
   record { U = T.𝟙; cone = cone'; universality = univ p }
-  where cone' = [at= (λ ()) ,naturality= (λ { {()} }) ]
-        instance _ = T
+  where instance _ = T
+        cone' = TerminalCone T.𝟙
         univ : T.IsTerminal T.𝟙 → IsUniversalCone T.𝟙 cone'
         to-universal ⦃ univ q ⦄ {V} c with f , p ← q V =
           f , ((λ ()) , λ f' _ → p f')
 
 Terminal→TTerminal : (T : Terminal) → T.Terminal
-Terminal→TTerminal T = 𝟙 , λ X → go X $ to-universal c₀
+Terminal→TTerminal T = 𝟙 , λ X → go X $ to-universal (c X)
   where instance _ = T
-        c₀ : {X : obj} → Cone TerminalDiagram X
-        c₀ {X} = TerminalCone X
-        go : (X : obj)
-             (p : ∃! λ (f : X ~> 𝟙) →
-                       ∀ X → c₀ at X == cone at X ∘ f)
+        c = TerminalCone
+        go : (V' : obj)
+             (p : ∃! λ (f : V' ~> 𝟙) → ∀ X → c V' at X == cone at X ∘ f)
              → --------------------------------------------------
-             ∃!-of-type (X ~> 𝟙)
+             ∃!-of-type (V' ~> 𝟙)
         go X (f , (_ , !f)) = f , λ f' → !f f' λ ()
 
 Terminal≅ : (T : Terminal)(T' : T.Terminal) → 𝟙 ⦃ T ⦄ ≅ T.𝟙 ⦃ T' ⦄
@@ -72,7 +70,7 @@ Terminal≅ T T'@(_ , p)
   with p 𝟙 | to-universal (TerminalCone T.𝟙)
      | p T.𝟙 | to-universal cone
   where instance _ = T; _ = T'
-... | f , !f | f⁻¹ , (_ , !f⁻¹) | !id₀ | !id' =
-  f , (f⁻¹ , (∃!-of-type== !id₀ (f ∘ f⁻¹) (id _) ,
+... | f , _ | f⁻¹ , (_ , _) | !id | !id' =
+  f , (f⁻¹ , (∃!-of-type== !id (f ∘ f⁻¹) (id _) ,
               ∃!== !id' (λ ()) (λ ())))
 
