@@ -8,7 +8,7 @@ open import Functor
 open import NaturalTransformation renaming (Composition to _O_)
     
 open import Logic
-open import Proof hiding (coe)
+open import Proof
 
 module General where
   open import Construction.Cone.Definition using (Diagram; Cone)
@@ -31,38 +31,38 @@ module General where
     coe (ap (_⟹ F o D) (o-Const 𝕀 V F))
         (left-compose F c)
 
-  open import Type.Sum hiding (_,_)
+  open import Type.Sum renaming (_,_ to _Σ,_)
   open import Function.Property
 
   open import Adjunction
   
-  functor-universal-cone :
-    {ℂ : Category 𝒰 𝒱}
-    {𝔻 : Category 𝒲 𝒯}
-    {D : Diagram 𝕀 ⦃ ℂ ⦄}
-    (univ : UniversalCone ⦃ ℂ ⦄ 𝕀 D)
-    (F : Functor ℂ 𝔻)
-    (A : Σ λ G → G ⊣ F)
-    → -----------------------------
-    let instance _ = ℂ; _ = 𝔻; _ = F; _ = univ in
-    IsUniversalCone 𝕀 (F₀ U) (left-compose-cone F cone)
-  to-universal ⦃ functor-universal-cone {ℂ = ℂ}{_}{D} univ F (G Σ., A) ⦄ {V} c
-    with to-universal ((right-compose ε D) O left-compose-cone G c)
-    where instance _ = univ; _ = ℂ; _ = A
-  to-universal (functor-universal-cone {ℂ = ℂ}{𝔻} univ F (G Σ., A)) {V} c
-    | GV~>U , (comp , uniq) =
-    f ,
-    ((λ i → {!!}) ,
-     λ f' p → {!!})
-    where instance _ = univ; _ = ℂ; _ = 𝔻; _ = A
-          A' = ⊣→-| A
-          f : V ~> F₀ ⦃ F ⦄ U
-          f = back ⦃ _-|_.bijection A' V U ⦄ GV~>U
+  -- functor-universal-cone :
+  --   {ℂ : Category 𝒰 𝒱}
+  --   {𝔻 : Category 𝒲 𝒯}
+  --   {D : Diagram 𝕀 ⦃ ℂ ⦄}
+  --   (univ : UniversalCone ⦃ ℂ ⦄ 𝕀 D)
+  --   (F : Functor ℂ 𝔻)
+  --   (A : Σ λ G → G ⊣ F)
+  --   → -----------------------------
+  --   let instance _ = ℂ; _ = 𝔻; _ = F; _ = univ in
+  --   IsUniversalCone 𝕀 (F₀ U) (left-compose-cone F cone)
+  -- to-universal ⦃ functor-universal-cone {ℂ = ℂ}{_}{D} univ F (G Σ, A) ⦄ {V} c
+  --   with to-universal ((right-compose ε D) O left-compose-cone G c)
+  --   where instance _ = univ; _ = ℂ; _ = A
+  -- to-universal (functor-universal-cone {ℂ = ℂ}{𝔻} univ F (G Σ, A)) {V} c
+  --   | GV~>U , (comp , uniq) =
+  --   f ,
+  --   ((λ i → {!!}) ,
+  --    λ f' p → {!!})
+  --   where instance _ = univ; _ = ℂ; _ = 𝔻; _ = A
+  --         A' = ⊣→-| A
+  --         f : V ~> F₀ ⦃ F ⦄ U
+  --         f = back ⦃ _-|_.bijection A' V U ⦄ GV~>U
 
 open General public
 
 module WithFixedCategory ⦃ ℂ : Category 𝒲 𝒯 ⦄ where
-  open import Isomorphism
+  open import Morphism.Iso
 
   open import Construction.Cone.Definition 𝕀 
   open import Construction.Cone.Universal.Definition 𝕀 

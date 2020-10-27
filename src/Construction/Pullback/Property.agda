@@ -11,8 +11,6 @@ open import Type.Sum renaming (_,_ to _Σ,_)
 open import Logic
 open import Proof
 
-open import Construction.Cone.Universal
-
 -- diagram:
 -- A' ~ f' ~> B' ~ g' ~> D
 -- |         /          /
@@ -63,9 +61,25 @@ two-pullbacks {f = f}{g}{h} (B' Σ, (h' Σ, g') , (gh'==hg' , umpB'))
           === p₁'           :by: g'f'uA'==p₁'
         qed)))})}}
 
+open import Proposition.Sum
+
 open import Morphism.Iso
 open import Morphism.Iso.Proof
-import Construction.Pullback.AsUniversalCone as CPullback
+open import Construction.Pullback.AsUniversalCone
+  using (𝕀; PPullback→Pullback; Pullback≅)
+open import Construction.Cone.Universal.Definition 𝕀
+open import Construction.Cone.Universal.Property 𝕀
+
+pullback-≅ : {A B C : obj}
+  {f : A ~> C}{g : B ~> C}
+  (P P' : Pullback f g)
+  → let top : Pullback f g → obj
+        top P = pr₁ (elem P)
+  in ----------------------------------------
+  top P ≅ top P'
+pullback-≅ P P' =
+  universal-cone-unique-upto-iso (PPullback→Pullback P)
+                                 (PPullback→Pullback P')
 
 pullback-associative : {A B C D : obj}
   {f : A ~> B}{g : B ~> C}{h : D ~> C}
@@ -77,9 +91,15 @@ pullback-associative : {A B C D : obj}
   let instance _ = pull-gfh in
   --------------------------------------------------
   A ×[ B ] (B ×[ C ] D) ≅ A ×[ C ] D
-pullback-associative {A}{B}{C}{D} pull-gh pull-fh' pull-gfh@(A×[C]D Σ, _ , _) =
+pullback-associative {A}{B}{C}{D}
+  pull-gh pull-fh' pull-gfh@(A×[C]D Σ, _ , _) =
   proof A ×[ B ] (B ×[ C ] D)
-    〉 _≅_ 〉 A×[C]D :by: {!!}
-    〉 _≅_ 〉 A×[C]D :by: {!!}
+    〉 _≅_ 〉 U ⦃ C₁ ⦄ :by: Pullback≅ C₁ pull-composite
+    〉 _≅_ 〉 U ⦃ C₀ ⦄ :by: universal-cone-unique-upto-iso C₁ C₀
+    〉 _≅_ 〉 A×[C]D   :by: Pullback≅ C₀ pull-gfh
   qed
   where instance _ = pull-gh; _ = pull-fh'; _ = pull-gfh
+        pull-composite = (A ×[ B ] (B ×[ C ] D) Σ, (p₁ Σ, p₂ ∘ p₂) ,
+                          two-pullbacks pull-gh pull-fh')
+        C₀ = PPullback→Pullback pull-gfh
+        C₁ = PPullback→Pullback pull-composite

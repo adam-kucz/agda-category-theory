@@ -1,18 +1,13 @@
 {-# OPTIONS --exact-split --safe --prop #-}
-module Category.Property where
+open import Universes
+open import Category.Definition
 
-open import PropUniverses
+module Category.Property ⦃ ℂ : Category 𝒰 𝒱 ⦄{X Y : obj} where
+
 open import Logic
 open import Proof
 
-open import Category.Definition
-
-bi-unit :
-  ⦃ ℂ : Category 𝒰 𝒱 ⦄
-  {X Y : obj}
-  (f : X ~> Y)
-  → --------------------
-  id Y ∘ f == f ∘ id X
+bi-unit : (f : X ~> Y) → id Y ∘ f == f ∘ id X
 bi-unit f =
   proof id _ ∘ f
     〉 _==_ 〉 f        :by: left-unit f
@@ -20,8 +15,7 @@ bi-unit f =
   qed
 
 ∘==∘ : 
-  ⦃ ℂ : Category 𝒰 𝒱 ⦄
-  {X Y Y' Z : obj}
+  {Y' Z : obj}
   {g : Y ~> Z}{f : X ~> Y}
   {g' : Y' ~> Z}{f' : X ~> Y'}
   (p : Y == Y')
