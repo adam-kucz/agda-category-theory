@@ -1,16 +1,16 @@
 {-# OPTIONS --safe --exact-split --prop  #-}
-module Morphism.Iso.Property where
-
+open import Universes
 open import Category
+
+module Morphism.Iso.Property ⦃ ℂ : Category 𝒰 𝒱 ⦄ where
+
 open import Morphism.Iso.Definition
 
-open import Universes
 open import Logic using (_,_)
 
 open import Category.Opposite
 
 iso-self-dual :
-  ⦃ ℂ : Category 𝒰 𝒱 ⦄
   {X Y : obj}
   {f : X ~> Y}
   (iso-f : iso f)
@@ -20,7 +20,6 @@ iso-self-dual :
 iso-self-dual (g , (left , right)) = g , (right , left)
 
 ≅-self-dual :
-  ⦃ ℂ : Category 𝒰 𝒱 ⦄
   {X Y : obj}
   (X≅Y : X ≅ Y)
   → --------------------
@@ -33,7 +32,6 @@ open import Proposition.Function using (_$_)
 open import Proof
 
 ≅-unique-self-dual :
-  ⦃ ℂ : Category 𝒰 𝒱 ⦄
   {X Y : obj}
   (X≅Y : X ≅-unique Y)
   → --------------------
@@ -44,13 +42,39 @@ open import Proof
   Y~>X , (X~>Y , (X~>Y∘Y~>X==id , Y~>X∘X~>Y==id) ,
   λ { Y~>X' (X~>Y' , (X~>Y'∘Y~>X'==id , Y~>X'∘X~>Y'==id)) →
     proof Y~>X'
-     〉 _==_ 〉 Y~>X' ∘ id Y          :by: sym $ right-unit Y~>X'
-     〉 _==_ 〉 Y~>X' ∘ (X~>Y ∘ Y~>X) :by: ap (Y~>X' ∘_) $ sym X~>Y∘Y~>X==id
-     〉 _==_ 〉 Y~>X' ∘ X~>Y ∘ Y~>X   :by: assoc Y~>X' X~>Y Y~>X
-     〉 _==_ 〉 Y~>X' ∘ X~>Y' ∘ Y~>X
+     === Y~>X' ∘ id Y          :by: sym $ right-unit Y~>X'
+     === Y~>X' ∘ (X~>Y ∘ Y~>X) :by: ap (Y~>X' ∘_) $ sym X~>Y∘Y~>X==id
+     === Y~>X' ∘ X~>Y ∘ Y~>X   :by: assoc Y~>X' X~>Y Y~>X
+     === Y~>X' ∘ X~>Y' ∘ Y~>X
        :by: ap (λ — → Y~>X' ∘ — ∘ Y~>X) $
             sym $
             uniq-iso-X~>Y X~>Y' (Y~>X' , (X~>Y'∘Y~>X'==id , Y~>X'∘X~>Y'==id))
-     〉 _==_ 〉 id X ∘ Y~>X           :by: ap (_∘ Y~>X) Y~>X'∘X~>Y'==id
-     〉 _==_ 〉 Y~>X                 :by: left-unit Y~>X
+     === id X ∘ Y~>X           :by: ap (_∘ Y~>X) Y~>X'∘X~>Y'==id
+     === Y~>X                  :by: left-unit Y~>X
     qed})
+
+open import Relation.Binary
+
+instance
+  Reflexive≅ : Reflexive _≅_
+  Symmteric≅ : Symmetric _≅_
+  Transitive≅ : Transitive _≅_
+
+refl ⦃ Reflexive≅ ⦄ X = id X , (id X , (left-unit (id X) , left-unit (id X)))
+sym ⦃ Symmteric≅ ⦄ (f , (f⁻¹ , (p , q))) = (f⁻¹ , (f , (q , p)))
+trans ⦃ Transitive≅ ⦄ (f , (f⁻¹ , (pf , qf)))(g , (g⁻¹ , (pg , qg))) =
+  g ∘ f , (f⁻¹ ∘ g⁻¹ , ((
+  proof g ∘ f ∘ (f⁻¹ ∘ g⁻¹)
+    === g ∘ (f ∘ (f⁻¹ ∘ g⁻¹)) :by: sym $ assoc g f _
+    === g ∘ (f ∘ f⁻¹ ∘ g⁻¹)   :by: ap (g ∘_) $ assoc f f⁻¹ g⁻¹
+    === g ∘ (id _ ∘ g⁻¹)      :by: ap (g ∘_) $ ap (_∘ g⁻¹) pf
+    === g ∘ g⁻¹               :by: ap (g ∘_) $ left-unit g⁻¹
+    === id _                  :by: pg
+  qed) , (
+  proof f⁻¹ ∘ g⁻¹ ∘ (g ∘ f)
+    === f⁻¹ ∘ (g⁻¹ ∘ (g ∘ f)) :by: sym $ assoc f⁻¹ g⁻¹ _
+    === f⁻¹ ∘ (g⁻¹ ∘ g ∘ f)   :by: ap (f⁻¹ ∘_) $ assoc g⁻¹ g f
+    === f⁻¹ ∘ (id _ ∘ f)      :by: ap (λ — → f⁻¹ ∘ (— ∘ f)) qg
+    === f⁻¹ ∘ f               :by: ap (f⁻¹ ∘_) $ left-unit f
+    === id _                  :by: qf
+  qed)))
