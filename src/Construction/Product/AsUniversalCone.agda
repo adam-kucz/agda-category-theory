@@ -112,7 +112,7 @@ module WithFixedCategory ⦃ ℂ : Category 𝒰 𝒱 ⦄ where
           univ : P.IsProduct A B (A P.× B) P.π₁ P.π₂
                  → ----------------------------------------
                  IsUniversalCone (A P.× B) cone'
-          to-universal ⦃ univ q ⦄ {V} c
+          to-universal ⦃ univ q ⦄ c
             with f , (p₁ , p₂ , !f) ← q (c at ₀)(c at ₁) =
             f , ((λ { ₀ → sym p₁ ; ₁ → sym p₂}) ,
                  λ f' p' → !f f' (sym (p' ₀) , sym (p' ₁)))
