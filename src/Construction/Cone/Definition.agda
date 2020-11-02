@@ -5,7 +5,8 @@ open import Category
 module Construction.Cone.Definition (𝕀 : Category 𝒲 𝒯) where
 
 module WithFixedCategory ⦃ ℂ : Category 𝒰 𝒱 ⦄ where
-  open import Functor
+  open import Functor.Definition
+  open import Functor.Construction
   open import NaturalTransformation
   
   Diagram : 𝒰 ⊔ 𝒱 ⊔ 𝒲 ⊔ 𝒯 ˙

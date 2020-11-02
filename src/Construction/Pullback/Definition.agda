@@ -15,20 +15,20 @@ module WithFixedCategory ⦃ ℂ : Category 𝒰 𝒱 ⦄ where
     (f : A ~> C)
     (g : B ~> C)
     (P : obj)
-    (p₀ : P ~> A)
-    (p₁ : P ~> B)
+    (p₁ : P ~> A)
+    (p₂ : P ~> B)
     → ---------------------
     𝒰 ⊔ 𝒱 ᵖ
-  IsPullback {A}{B}{C} f g P p₀ p₁ =
-    f ∘ p₀ == g ∘ p₁ ∧
-    ∀{X : obj}(p₀' : X ~> A)(p₁' : X ~> B)(q : f ∘ p₀' == g ∘ p₁') →
-    ∃! λ (〈p₀',p₁'〉 : X ~> P) →
-    p₀ ∘ 〈p₀',p₁'〉 == p₀' ∧ p₁ ∘ 〈p₀',p₁'〉 == p₁'
+  IsPullback {A}{B}{C} f g P p₁ p₂ =
+    f ∘ p₁ == g ∘ p₂ ∧
+    ∀{X : obj}(p₁' : X ~> A)(p₂' : X ~> B)(q : f ∘ p₁' == g ∘ p₂') →
+    ∃! λ (〈p₁',p₂'〉 : X ~> P) →
+    p₁ ∘ 〈p₁',p₂'〉 == p₁' ∧ p₂ ∘ 〈p₁',p₂'〉 == p₂'
 
   Pullback : {A B C : obj}(f : A ~> C)(g : B ~> C) → 𝒰 ⊔ 𝒱 ˙
   Pullback {A}{B} f g =
     Σₚ {X = Σ λ (P : obj) → P ~> A × P ~> B }
-       λ { (P Σ, (p₀ Σ, p₁)) → IsPullback f g P p₀ p₁}
+       λ { (P Σ, (p₁ Σ, p₂)) → IsPullback f g P p₁ p₂}
 
 open WithFixedCategory public
 

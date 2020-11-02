@@ -1,4 +1,4 @@
-{-# OPTIONS --exact-split --prop #-}
+{-# OPTIONS --exact-split --safe --prop #-}
 module Construction.Equalizer where
 
 open import Construction.Equalizer.Definition public

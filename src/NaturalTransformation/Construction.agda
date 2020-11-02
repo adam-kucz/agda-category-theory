@@ -5,7 +5,7 @@ open import NaturalTransformation.Definition
 
 open import Universes
 open import Category
-open import Functor
+open import Functor.Definition
 
 open import Proof
 
@@ -46,6 +46,8 @@ naturality ⦃ Composition {ℂ = ℂ} {𝔻} {F} {G} {H} ψ ϕ ⦄ {X} {Y} f =
     === F₁ f ∘ (ψ at X ∘ ϕ at X) :by: sym $ assoc _ _ _
   qed
   where instance _ = 𝔻; _ = F; _ = G; _ = H
+
+open import Functor.Construction
 
 HorizontalComposition :
   {ℂ : Category 𝒰 𝒱}

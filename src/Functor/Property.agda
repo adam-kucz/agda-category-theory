@@ -4,10 +4,31 @@ module Functor.Property where
 open import Functor.Definition
 
 open import PropUniverses
+open import Proposition.Sum
+open import Type.Sum renaming (_,_ to _Σ,_)
 open import Logic
 open import Proof
 
 open import Category
+-- open import Morphism.Iso
+-- open import Functor.Construction
+open import NaturalTransformation
+-- open import Construction.Cone
+-- open import Construction.Limit
+
+-- preserves-limits :
+--   ⦃ ℂ : Category 𝒰 𝒱 ⦄
+--   {𝔻 : Category 𝒳 𝒴}
+--   (F : Functor ℂ 𝔻)
+--   (𝕀 : Category 𝒲 𝒯)
+--   → --------------------
+--   𝒰 ⊔ 𝒱 ⊔ 𝒲 ⊔ 𝒯 ᵖ
+-- preserves-limits F 𝕀 =
+--   (D : Diagram 𝕀)(L : lim← D) →
+--   let V = pr₁ (elem L)
+--       cone = pr₂ (elem L)
+--       instance ccat = ConeCat 𝕀 D; _ = F
+--   in isomorphic ⦃ ccat ⦄ (F₀ V Σ, left-compose F cone) ?
 
 faithful :
   {ℂ : Category 𝒰 𝒱}

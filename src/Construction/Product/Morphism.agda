@@ -2,9 +2,7 @@
 open import Universes
 open import Category
 
-module Construction.Product.Morphism {ℂ : Category 𝒰 𝒱} where
-  private instance _ = ℂ
-  
+module Construction.Product.Morphism ⦃ ℂ : Category 𝒰 𝒱 ⦄ where
   open import Construction.Product.Definition hiding (〈_,_〉)
   open import Construction.Product.Syntax
   
@@ -16,7 +14,9 @@ module Construction.Product.Morphism {ℂ : Category 𝒰 𝒱} where
     ⦃ pa[bc] : Product A (B × C) ⦄
     → --------------------------------
     A × (B × C) ~> A × B × C
-  assoc-mor A B C  = 〈 〈 π₁ , π₁ ∘ π₂ 〉 , π₂ {A = B} ∘ π₂ 〉
+  assoc-mor A B C ⦃ pa[bc] = P ⦄  = 〈 〈 π₁ , π₁ ∘ π₂' 〉 , π₂ ∘ π₂' 〉
+    where π₂' : A × (B × C) ~> B × C
+          π₂' = π₂
 
   assoc-mor-inv :
     (A B C : obj)
@@ -26,7 +26,9 @@ module Construction.Product.Morphism {ℂ : Category 𝒰 𝒱} where
     ⦃ pa[bc] : Product A (B × C) ⦄
     → --------------------------------
     A × B × C ~> A × (B × C)
-  assoc-mor-inv A B C  = 〈 π₁ ∘ π₁ , 〈 π₂ ∘ π₁ , π₂ 〉 〉
+  assoc-mor-inv A B C  = 〈 π₁ ∘ π₁' , 〈 π₂ ∘ π₁' , π₂ 〉 〉
+    where π₁' : A × B × C ~> A × B
+          π₁' = π₁
 
   swap-mor :
     (A B : obj)

@@ -1,4 +1,4 @@
-{-# OPTIONS --exact-split --prop #-}
+{-# OPTIONS --exact-split --safe --prop #-}
 module Construction.Equalizer.Definition where
 
 open import PropUniverses
@@ -25,6 +25,12 @@ module WithFixedCategory ⦃ ℂ : Category 𝒰 𝒱 ⦄ where
   Equalizer : {A B : obj}(f g : A ~> B) → 𝒰 ⊔ 𝒱 ˙
   Equalizer {A} f g = Σₚ {X = Σ λ (E : obj) → E ~> A }
                          λ { (E Σ, e) → IsEqualizer f g E e }
+
+  equalize : {A B : obj}(f g : A ~> B)
+    ⦃ E : Equalizer f g ⦄
+    → --------------------------------------
+    Σ λ (E : obj) → E ~> A
+  equalize _ _ ⦃ E ⦄ = elem E
 
 open WithFixedCategory public
 

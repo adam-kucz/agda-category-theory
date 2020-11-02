@@ -1,7 +1,7 @@
 {-# OPTIONS --exact-split --prop #-}
 open import Universes
 open import Category
-module Construction.Product.Syntax {ℂ : Category 𝒰 𝒱} where
+module Construction.Product.Syntax ⦃ ℂ : Category 𝒰 𝒱 ⦄ where
   
 open import Proposition.Sum
 open import Proof
@@ -81,6 +81,16 @@ private
         qed))
 
 open Properties hiding (get-mor) public
+
+prod-mor : {A B : obj}
+  (P : Product A B)
+  {X : obj}
+  (f : X ~> A)
+  (g : X ~> B)
+  → let instance _ = P
+  in ------------------------------
+  X ~> A × B
+prod-mor P f g = let instance _ = P in 〈 f , g 〉
 
 infixl 167 _⊠_
 _⊠_ :

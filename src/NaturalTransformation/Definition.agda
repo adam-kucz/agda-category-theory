@@ -2,7 +2,7 @@
 module NaturalTransformation.Definition where
 
 open import Category
-open import Functor
+open import Functor.Definition
 
 open import Universes
 open import Proposition.Identity hiding (refl)
@@ -41,6 +41,7 @@ open _⟹_ ⦃ … ⦄ using (naturality) public
 ⟹== θ θ (Id.refl _) = Id.refl θ
 
 open import Category.ArrowCategory
+open import Functor.Construction
 
 -- alternative definition
 record NaturalTransformation'

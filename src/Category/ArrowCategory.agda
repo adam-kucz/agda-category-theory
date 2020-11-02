@@ -56,7 +56,7 @@ private
     assoc ⦃ ArrowCategory ⦄ h g f =
       ⟵ CommutingSquare== (assoc (top h) (top g) (top f) , assoc (bot h) (bot g) (bot f))
     
-    open import Functor
+    open import Functor.Definition
     
     Dom : Functor ArrowCategory ℂ
     F₀ ⦃ Dom ⦄ = dom

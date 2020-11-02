@@ -2,13 +2,14 @@
 module Construction.Product.Definition where
 
 open import PropUniverses
+open import Type.Sum renaming (_,_ to _Σ,_; _×_ to _x_) hiding (〈_,_〉)
+open import Logic
+
 open import Category
 
 module WithFixedCategory ⦃ ℂ : Category 𝒰 𝒱 ⦄ where
-  open import Type.Sum renaming (_,_ to _Σ,_; _×_ to _x_) hiding (〈_,_〉)
   open import Proposition.Sum
   open import Proposition.Identity
-  open import Logic
   
   IsProduct :
     (A B : obj)
@@ -36,8 +37,6 @@ module WithFixedCategory ⦃ ℂ : Category 𝒰 𝒱 ⦄ where
   π₂ : {A B : obj} ⦃ P : Product A B ⦄ → A × B ~> B
   π₂ ⦃ _ Σ, (_ Σ, π₂) , _ ⦄ = π₂
   
-  open import Logic
-  
   〈_,_〉 :
     {A B X : obj}
     (f : X ~> A)
@@ -51,5 +50,11 @@ open WithFixedCategory public
 
 HasProducts : (ℂ : Category 𝒲 𝒯) → 𝒲 ⊔ 𝒯 ˙
 HasProducts ℂ = ∀ {A B : obj} → Product A B
+  where instance _ = ℂ
+
+open import Construction.Terminal
+
+HasAllFiniteProducts : (ℂ : Category 𝒲 𝒯) → 𝒲 ⊔ 𝒯 ˙
+HasAllFiniteProducts ℂ = Terminal x HasProducts ℂ
   where instance _ = ℂ
 
