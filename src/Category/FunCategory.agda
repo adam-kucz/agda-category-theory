@@ -99,7 +99,7 @@ Cur {ℂ = ℂ}{𝔻 = 𝔻}{𝔼 = 𝔼} F =
               === F₁ (id X , g) ∘ F₁ (id X , f)
                 :by: ∘-preserv (id X , g) (id X , f)
               qed)]
-        nat-trans : ∀{X Y}(f : X ~> Y) → (with-left X) ⟹ with-left Y
+        nat-trans : ∀{X Y}(f : X ~> Y) → with-left X ⟹ with-left Y
         nat-trans {X}{Y} f = record
           { _at_ = λ X' → F₁ (f , id X')
           ; naturality = λ {X'}{Y'} f' →

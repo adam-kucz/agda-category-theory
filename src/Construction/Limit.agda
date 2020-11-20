@@ -5,10 +5,17 @@ open import Category
 open import Construction.Cone
 open import Construction.Terminal
 
-open import Universes
+open import PropUniverses
 open import Type.Sum renaming (_,_ to _Σ,_)
 
 module WithIndexCategory ⦃ ℂ : Category 𝒰 𝒱 ⦄{𝕀 : Category 𝒲 𝒯} where
+  IsLimit :
+    (D : Diagram 𝕀)
+    (cone : Σ λ (U : obj) → Cone 𝕀 D U)
+    → ------------------------------------
+    𝒰 ⊔ 𝒱 ⊔ 𝒲 ⊔ 𝒯 ᵖ
+  IsLimit D = IsTerminal ⦃ ConeCat 𝕀 D ⦄
+
   Limit lim← : (D : Diagram 𝕀) → 𝒰 ⊔ 𝒱 ⊔ 𝒲 ⊔ 𝒯 ˙
   Limit D = Terminal ⦃ ConeCat 𝕀 D ⦄
   
@@ -27,7 +34,7 @@ module WithIndexCategory ⦃ ℂ : Category 𝒰 𝒱 ⦄{𝕀 : Category 𝒲 �
   to-universal ⦃ LimitIsUniversalCone (V Σ, c , p) ⦄ {V'} c'
     with (f , pf , q) ← p (V' Σ, c') =
     f , ((λ X → sym $ pf X) ,
-         λ f' pf' → case q (f' , λ X → sym $ pf' X) of λ
+         λ f' pf' → caseₚ q (f' , λ X → sym $ pf' X) of λ
          { (Id.refl (f , pf)) → refl f })
   
   open import Morphism.Iso

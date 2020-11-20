@@ -1,15 +1,16 @@
 {-# OPTIONS --exact-split --prop #-}
+module Construction.Exponential.Property where
+
 open import PropUniverses
+open import Proposition.Sum
+open import Proof
+
 open import Category
+open import Morphism.Iso
 open import Construction.Product
   using (HasProducts; _×_; _⊠_; 〈_,_〉; π₁; π₂; 〈π₁,π₂〉==id; ⊠-compose; ⊠-id)
 import Construction.Exponential.Definition as ExpDef
 
-open import Isomorphism
-module Construction.Exponential.Property where
-
-open import Proposition.Identity renaming (Idₚ to Id) hiding (refl) 
-open import Proposition.Sum
 open import Axiom.UniqueChoice
 
 HasExponentials : (ℂ : Category 𝒲 𝒯) ⦃ _ : HasProducts ℂ ⦄ → 𝒲 ⊔ 𝒯 ˙
@@ -56,8 +57,7 @@ private
           (f : Z × X ~> Y)
           → ----------------------------------------------------------
           app ∘ (cur f ⊠ id X) == f
-        app-cur f with get-mor f
-        app-cur f | _ , (p , _) = p
+        app-cur f = left $ prop (get-mor f)
         
         curry-mor-uniq :
           {Z : obj}
@@ -70,15 +70,15 @@ private
         cur-app==id : cur app == id (Y ^ X)
         cur-app==id = sym $ curry-mor-uniq app (id (Y ^ X)) (
           proof app ∘ id (Y ^ X) ⊠ id X
-            〉 _==_ 〉 app ∘ 〈 id (Y ^ X) ∘ π₁ , id X ∘ π₂ 〉
+            === app ∘ 〈 id (Y ^ X) ∘ π₁ , id X ∘ π₂ 〉
               :by: Id.refl (app ∘ id (Y ^ X) ⊠ id X)
-            〉 _==_ 〉 app ∘ 〈 π₁ , id X ∘ π₂ 〉
+            === app ∘ 〈 π₁ , id X ∘ π₂ 〉
               :by: ap (λ — → app ∘ 〈 — , id X ∘ π₂ 〉) $ left-unit π₁
-            〉 _==_ 〉 app ∘ 〈 π₁ , π₂ 〉
+            === app ∘ 〈 π₁ , π₂ 〉
               :by: ap (λ — → app ∘ 〈 π₁ , — 〉) $ left-unit π₂
-            〉 _==_ 〉 app ∘ id (Y ^ X × X)
+            === app ∘ id (Y ^ X × X)
               :by: ap (app ∘_) 〈π₁,π₂〉==id
-            〉 _==_ 〉 app :by: right-unit app
+            === app :by: right-unit app
           qed)
 
     open WithFixedExponential hiding (get-mor) public
@@ -89,28 +89,34 @@ private
       (f : Y ~> Z)
       ⦃ E : Exponential X Y ⦄
       ⦃ E' : Exponential X Z ⦄
-      ⦃ E'' : Exponential X W ⦄
+      ⦃ E″ : Exponential X W ⦄
       → --------------------------------------------------
       cur (g ∘ f ∘ app) == cur (g ∘ app) ∘ cur (f ∘ app)
-    cur-compose-app {X} g f = sym $
-      curry-mor-uniq (g ∘ f ∘ app) (cur (g ∘ app) ∘ cur (f ∘ app)) (
-        proof app ∘ (cur (g ∘ app) ∘ cur (f ∘ app)) ⊠ id X
-          〉 _==_ 〉 app ∘ (cur (g ∘ app) ∘ cur (f ∘ app)) ⊠ (id X ∘ id X)
-            :by: ap (λ — → app ∘ (cur (g ∘ app) ∘ cur (f ∘ app)) ⊠ —) $
+    cur-compose-app {X}{Y}{Z}{W} g f ⦃ E ⦄ ⦃ E' ⦄ ⦃ E″ ⦄ = sym $
+      curry-mor-uniq (g ∘ f ∘ app→Y) (g' ∘ f') (
+        proof app→W ∘ (g' ∘ f') ⊠ id X
+          === app→W ∘ (g' ∘ f') ⊠ (id X ∘ id X)
+            :by: ap (λ — → app→W ∘ (g' ∘ f') ⊠ —) $
                  sym $ left-unit (id X)
-          〉 _==_ 〉 app ∘ (cur (g ∘ app) ⊠ id X ∘ cur (f ∘ app) ⊠ id X)
-            :by: ap (app ∘_) $ ⊠-compose _ _ _ _
-          〉 _==_ 〉 app ∘ cur (g ∘ app) ⊠ id X ∘ cur (f ∘ app) ⊠ id X
-            :by: assoc app _ _
-          〉 _==_ 〉 g ∘ app ∘ cur (f ∘ app) ⊠ id X
-            :by: ap (_∘ cur (f ∘ app) ⊠ id X) $ app-cur (g ∘ app)
-          〉 _==_ 〉 g ∘ (app ∘ cur (f ∘ app) ⊠ id X)
-            :by: sym $ assoc g _ _
-          〉 _==_ 〉 g ∘ (f ∘ app)
-            :by: ap (g ∘_) $ app-cur (f ∘ app)
-          〉 _==_ 〉 g ∘ f ∘ app
-            :by: assoc g f app
+          === app→W ∘ (g' ⊠ id X ∘ f' ⊠ id X)
+            :by: ap (app→W ∘_) $ ⊠-compose _ _ _ _
+          === app→W ∘ g' ⊠ id X ∘ f' ⊠ id X :by: assoc app→W _ _
+          === g ∘ app→Z ∘ f' ⊠ id X
+            :by: ap (_∘ f' ⊠ id X) $ app-cur ⦃ E″ ⦄ (g ∘ app→Z)
+          === g ∘ (app→Z ∘ f' ⊠ id X)       :by: sym $ assoc g app→Z _
+          === g ∘ (f ∘ app→Y)
+            :by: ap (g ∘_) $ app-cur ⦃ E' ⦄ (f ∘ app→Y)
+          === g ∘ f ∘ app→Y                 :by: assoc g f app→Y
         qed)
+        where app→Y = app ⦃ E ⦄; app→Z = app ⦃ E' ⦄; app→W = app ⦃ E″ ⦄
+              cur→Y^X : ∀{A : obj}(f : A × X ~> Y) → A ~> Y ^ X
+              cur→Y^X = cur
+              cur→Z^X : ∀{A : obj}(f : A × X ~> Z) → A ~> Z ^ X
+              cur→Z^X = cur
+              cur→W^X : ∀{A : obj}(f : A × X ~> W) → A ~> W ^ X
+              cur→W^X = cur
+              f' = cur→Z^X (f ∘ app→Y)
+              g' = cur→W^X (g ∘ app→Z)
     
     open import Logic
     
@@ -125,47 +131,46 @@ private
       cur2-app1 ,
       (cur1-app2 ,
         ((proof cur2-app1 ∘ cur1-app2
-            〉 _==_ 〉 cur2-app2
+            === cur2-app2
               :by: curry-mor-uniq app2 (cur2-app1 ∘ cur1-app2) (
                 proof app2 ∘ (cur2-app1 ∘ cur1-app2) ⊠ id X
-                  〉 _==_ 〉 app2 ∘ (cur2-app1 ∘ cur1-app2) ⊠ (id X ∘ id X)
+                  === app2 ∘ (cur2-app1 ∘ cur1-app2) ⊠ (id X ∘ id X)
                     :by: ap (λ — → app2 ∘ (cur2-app1 ∘ cur1-app2) ⊠ —) $
                          sym $
                          right-unit (id X)
-                  〉 _==_ 〉 app2 ∘ (cur2-app1 ⊠ id X ∘ cur1-app2 ⊠ id X)
+                  === app2 ∘ (cur2-app1 ⊠ id X ∘ cur1-app2 ⊠ id X)
                     :by: ap (app2 ∘_) $ ⊠-compose _ _ _ _
-                  〉 _==_ 〉 app2 ∘ cur2-app1 ⊠ id X ∘ cur1-app2 ⊠ id X
+                  === app2 ∘ cur2-app1 ⊠ id X ∘ cur1-app2 ⊠ id X
                     :by: assoc app2 _ _
-                  〉 _==_ 〉 app1 ∘ cur1-app2 ⊠ id X
-                    :by: ap (_∘ cur1-app2 ⊠ id X) $ app-cur app1
-                  〉 _==_ 〉 app2 :by: app-cur app2
+                  === app1 ∘ cur1-app2 ⊠ id X
+                    :by: ap (_∘ cur1-app2 ⊠ id X) $ app-cur ⦃ E' ⦄ app1
+                  === app2 :by: app-cur app2
                 qed)
-            〉 _==_ 〉 id exp2 :by: sym $ curry-mor-uniq app2 (id exp2) (
+            === id exp2 :by: sym $ curry-mor-uniq app2 (id exp2) (
               proof app2 ∘ id exp2 ⊠ id X
-                〉 _==_ 〉 app2 ∘ id (exp2 × X) :by: ap (app2 ∘_) $ ⊠-id exp2 X
-                〉 _==_ 〉 app2                 :by: right-unit app2
+                === app2 ∘ id (exp2 × X) :by: ap (app2 ∘_) $ ⊠-id exp2 X
+                === app2                 :by: right-unit app2
               qed)
           qed) ,
           (proof cur1-app2 ∘ cur2-app1
-            〉 _==_ 〉 cur1-app1
+            === cur1-app1
               :by: curry-mor-uniq app1 (cur1-app2 ∘ cur2-app1) (
                 proof app1 ∘ (cur1-app2 ∘ cur2-app1) ⊠ id X
-                  〉 _==_ 〉 app1 ∘ (cur1-app2 ∘ cur2-app1) ⊠ (id X ∘ id X)
+                  === app1 ∘ (cur1-app2 ∘ cur2-app1) ⊠ (id X ∘ id X)
                     :by: ap (λ — → app1 ∘ (cur1-app2 ∘ cur2-app1) ⊠ —) $
-                         sym $
-                         right-unit (id X)
-                  〉 _==_ 〉 app1 ∘ (cur1-app2 ⊠ id X ∘ cur2-app1 ⊠ id X)
+                         sym $ right-unit (id X)
+                  === app1 ∘ (cur1-app2 ⊠ id X ∘ cur2-app1 ⊠ id X)
                     :by: ap (app1 ∘_) $ ⊠-compose _ _ _ _
-                  〉 _==_ 〉 app1 ∘ cur1-app2 ⊠ id X ∘ cur2-app1 ⊠ id X
+                  === app1 ∘ cur1-app2 ⊠ id X ∘ cur2-app1 ⊠ id X
                     :by: assoc app1 _ _
-                  〉 _==_ 〉 app2 ∘ cur2-app1 ⊠ id X
+                  === app2 ∘ cur2-app1 ⊠ id X
                     :by: ap (_∘ cur2-app1 ⊠ id X) $ app-cur app2
-                  〉 _==_ 〉 app1 :by: app-cur app1
+                  === app1 :by: app-cur ⦃ E' ⦄ app1
                 qed)
-            〉 _==_ 〉 id exp1 :by: sym $ curry-mor-uniq app1 (id exp1) (
+            === id exp1 :by: sym $ curry-mor-uniq app1 (id exp1) (
               proof app1 ∘ id exp1 ⊠ id X
-                〉 _==_ 〉 app1 ∘ id (exp1 × X) :by: ap (app1 ∘_) $ ⊠-id exp1 X
-                〉 _==_ 〉 app1                 :by: right-unit app1
+                === app1 ∘ id (exp1 × X) :by: ap (app1 ∘_) $ ⊠-id exp1 X
+                === app1                 :by: right-unit app1
               qed)
           qed)) ,
        app-cur app1 ,

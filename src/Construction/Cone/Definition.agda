@@ -4,18 +4,17 @@ open import Category
 
 module Construction.Cone.Definition (𝕀 : Category 𝒲 𝒯) where
 
-module WithFixedCategory ⦃ ℂ : Category 𝒰 𝒱 ⦄ where
-  open import Functor.Definition
-  open import Functor.Construction
-  open import NaturalTransformation
+open import Functor.Definition
+open import Functor.Construction
+open import NaturalTransformation
+open import Proof
   
+module WithFixedCategory ⦃ ℂ : Category 𝒰 𝒱 ⦄ where
   Diagram : 𝒰 ⊔ 𝒱 ⊔ 𝒲 ⊔ 𝒯 ˙
   Diagram = Functor 𝕀 ℂ
   
   Cone : (D : Diagram) (U : obj) → 𝒰 ⊔ 𝒱 ⊔ 𝒲 ⊔ 𝒯 ˙
   Cone D U = Const 𝕀 U ⟹ D
-
-  open import Proof
 
   compose-cone-vertex :
     {D : Diagram}{U V : obj}
@@ -43,8 +42,28 @@ module WithFixedCategory ⦃ ℂ : Category 𝒰 𝒱 ⦄ where
 
 open WithFixedCategory public
 
-open import Category.Opposite
+F-cone : ⦃ ℂ : Category 𝒰 𝒱 ⦄
+         ⦃ 𝔻 : Category 𝒳 𝒴 ⦄
+         {D : Diagram}{U : obj}
+         ⦃ F : Functor ℂ 𝔻 ⦄
+         (cone : Cone D U)
+         → ----------------------------------------
+         Cone (F o D) (F₀ U)
+F-cone {D = D}{U} ⦃ F ⦄ cone =
+  [at= (λ X → F₁ (cone at X))
+  ,naturality= (λ {X}{Y} f →
+    proof F₁ (cone at Y) ∘ id (F₀ U)
+      === F₁ (cone at Y) ∘ F₁ (id U)
+        :by: ap (F₁ (cone at Y) ∘_) $ sym $ id-preserv U
+      === F₁ (cone at Y ∘ id U)
+        :by: sym $ ∘-preserv (cone at Y) (id U)
+      === F₁ (F₁ ⦃ D ⦄ f ∘ cone at X)
+        :by: ap F₁ $ naturality ⦃ cone ⦄ f
+      === F₁ (F₁ ⦃ D ⦄ f) ∘ F₁ (cone at X)
+        :by: ∘-preserv (F₁ ⦃ D ⦄ f)(cone at X)
+    qed ) ]
 
+open import Category.Opposite
 Cocone :
   ⦃ ℂ : Category 𝒰 𝒱 ⦄
   (D : Diagram ⦃ ℂ ᵒᵖ ⦄)

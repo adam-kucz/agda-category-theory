@@ -12,7 +12,7 @@ module Construction.Exponential.Functor
 
 open import Functor
 open import Construction.Exponential
-open import Construction.Product.Unsafe
+open import Construction.Product
 
 open import Proof
 
@@ -21,7 +21,7 @@ F₀ ⦃ ^ X ⦄ Y = Y ^ X
 F₁ ⦃ ^ X ⦄ f = cur (f ∘ app)
 id-preserv ⦃ ^ X ⦄ Y =
   proof cur (id Y ∘ app)
-    〉 _==_ 〉 cur app    :by: ap cur $ left-unit app
-    〉 _==_ 〉 id (Y ^ X) :by: cur-app==id
+    === cur app    :by: ap cur $ left-unit app
+    === id (Y ^ X) :by: cur-app==id
   qed
 ∘-preserv ⦃ ^ X ⦄ g f = cur-compose-app g f

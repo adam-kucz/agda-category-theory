@@ -10,25 +10,34 @@ open import Logic
 open import Proof
 
 open import Category
--- open import Morphism.Iso
--- open import Functor.Construction
+open import Morphism.Iso
+open import Functor.Construction
 open import NaturalTransformation
--- open import Construction.Cone
--- open import Construction.Limit
+open import Construction.Cone
+open import Construction.Limit
+-- open import Construction.Terminal
 
--- preserves-limits :
---   ⦃ ℂ : Category 𝒰 𝒱 ⦄
---   {𝔻 : Category 𝒳 𝒴}
---   (F : Functor ℂ 𝔻)
---   (𝕀 : Category 𝒲 𝒯)
---   → --------------------
---   𝒰 ⊔ 𝒱 ⊔ 𝒲 ⊔ 𝒯 ᵖ
--- preserves-limits F 𝕀 =
---   (D : Diagram 𝕀)(L : lim← D) →
---   let V = pr₁ (elem L)
---       cone = pr₂ (elem L)
---       instance ccat = ConeCat 𝕀 D; _ = F
---   in isomorphic ⦃ ccat ⦄ (F₀ V Σ, left-compose F cone) ?
+preserves-limits :
+  {ℂ : Category 𝒰 𝒱}
+  {𝔻 : Category 𝒳 𝒴}
+  (F : Functor ℂ 𝔻)
+  (𝕀 : Category 𝒲 𝒯)
+  → --------------------
+  𝒰 ⊔ 𝒱 ⊔ 𝒳 ⊔ 𝒴 ⊔ 𝒲 ⊔ 𝒯 ᵖ
+preserves-limits {ℂ = ℂ}{𝔻} F 𝕀 =
+  (D : Diagram 𝕀)
+  (L : lim← D) →
+  let V = pr₁ (elem L); cone = pr₂ (elem L); instance _ = F
+  in IsLimit (F o D) (F₀ V Σ, F-cone 𝕀 cone)
+  where instance _ = ℂ; _ = 𝔻
+
+continuous :
+  {ℂ : Category 𝒰 𝒱}
+  {𝔻 : Category 𝒳 𝒴}
+  (F : Functor ℂ 𝔻)
+  → ----------------------------
+  𝒰ω
+continuous F = ∀{𝒲 𝒯 : Universe}{𝕀 : Category 𝒲 𝒯} → preserves-limits F 𝕀
 
 faithful :
   {ℂ : Category 𝒰 𝒱}

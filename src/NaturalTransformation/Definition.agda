@@ -40,6 +40,23 @@ open _⟹_ ⦃ … ⦄ using (naturality) public
   θ == ϕ
 ⟹== θ θ (Id.refl _) = Id.refl θ
 
+⟹het== :
+  {ℂ ℂ' : Category 𝒰 𝒱}
+  {𝔻 𝔻' : Category 𝒲 𝒯}
+  {F G : Functor ℂ 𝔻}
+  {F' G' : Functor ℂ' 𝔻'}
+  (θ : F ⟹ G)
+  (ϕ : F' ⟹ G')
+  (ℂ==ℂ' : ℂ == ℂ')
+  (𝔻==𝔻' : 𝔻 == 𝔻')
+  (F==F' : F Het.== F')
+  (G==G' : G Het.== G')
+  (p : _at_ θ Het.== _at_ ϕ)
+  → -----------------------------
+  θ Het.== ϕ
+⟹het== θ θ (Id.refl _)(Id.refl _)(Het.refl _)(Het.refl _)(Het.refl _) =
+  Het.refl θ
+
 open import Category.ArrowCategory
 open import Functor.Construction
 

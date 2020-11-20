@@ -95,23 +95,23 @@ prod-mor P f g = let instance _ = P in 〈 f , g 〉
 infixl 167 _⊠_
 _⊠_ :
   {X Y A B : obj}
-  (f : X ~> A)
-  (g : Y ~> B)
   ⦃ _ : Product X Y ⦄
   ⦃ _ : Product A B ⦄
+  (f : X ~> A)
+  (g : Y ~> B)
   → ------------------
   X × Y ~> A × B
 f ⊠ g = 〈 f ∘ π₁ , g ∘ π₂ 〉
 
 ⊠-compose :
   {X Y Z W A B : obj}
+  ⦃ Z×W : Product Z W ⦄
+  ⦃ X×Y : Product X Y ⦄
+  ⦃ A×B : Product A B ⦄
   (g  : X ~> A)
   (f  : Z ~> X)
   (g' : Y ~> B)
   (f' : W ~> Y)
-  ⦃ Z×W : Product Z W ⦄
-  ⦃ X×Y : Product X Y ⦄
-  ⦃ A×B : Product A B ⦄
   → -------------------------------------
   (g ∘ f) ⊠ (g' ∘ f') == g ⊠ g' ∘ f ⊠ f'
 ⊠-compose {X}{Y}{Z}{W} g f g' f' =
